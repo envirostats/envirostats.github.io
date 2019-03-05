@@ -1,4 +1,5 @@
 name: "EXGEN5549"
+output_dir: "."
 navbar:
   title: "EXGEN5549"
   left:
