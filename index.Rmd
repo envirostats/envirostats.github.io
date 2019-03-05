@@ -70,7 +70,7 @@ As of now, I am planning to cover the following topics (but I am flexible and ca
 - Producing tidy model outputs using the [*broom*](https://cran.r-project.org/web/packages/broom/vignettes/broom.html) package
 
 
-### Day 3(Sunday)
+### Sunday (Day 3)
 
 - Presenting your results using [R Studio](https://www.rstudio.com/) and [R Markdown](https://rmarkdown.rstudio.com/)
 
