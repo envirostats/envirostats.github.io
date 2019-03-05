@@ -2,7 +2,7 @@
 title: "Day 2"
 output:
   html_document:
-    theme: paper
+    theme: readable
     highlight: pygments
     toc: true
     toc_float:

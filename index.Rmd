@@ -24,7 +24,7 @@ For this course, we will be working with [R](https://www.r-project.org/), [R Stu
 
 I also recommend **two books** to serve as a reference guides. The first one is called [R for Data Science](https://r4ds.had.co.nz/) and the second one is [Hands-On Programming with R](https://rstudio-education.github.io/hopr/). You can read both books online for free, or purchase a hard-copy from Amazon if you prefer.
 
-On March 15, I will upload all course material for the respective days (see navigation pane above).
+On March 15, I will upload all course material for the respective days (see navigation pane above). In the meantime, have a look at the links I provided here and give them a quick read if you like. This will get you suffciently prepared for the course.
 
 As of now, I am planning to cover the following topics (but I am flexible and can adapt to the needs of you guys!):
 
@@ -79,4 +79,9 @@ As of now, I am planning to cover the following topics (but I am flexible and ca
 - General trouble shooting
 
 
-# See you soon!
+## See you soon!
+
+```{r fig.align='center', echo=F, out.width="60%", fig.cap="[xkcd: Ballmer Peak](https://xkcd.com/323/)"}
+knitr::include_graphics("https://imgs.xkcd.com/comics/ballmer_peak.png")
+```
+
