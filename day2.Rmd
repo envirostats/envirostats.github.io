@@ -1,0 +1,17 @@
+---
+title: "Day 2"
+output:
+  html_document:
+    theme: paper
+    highlight: pygments
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+

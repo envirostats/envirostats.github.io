@@ -1,0 +1,13 @@
+name: "EXGEN5549"
+navbar:
+  title: "EXGEN5549"
+  left:
+    - text: "Home"
+      icon: fa-home
+      href: index.html
+    - text: "Day 1"
+      href: day1.html
+    - text: "Day 2"
+      href: day2.html
+    - text: "Day 3"
+      href: day3.html

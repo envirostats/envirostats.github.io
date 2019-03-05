@@ -1,0 +1,24 @@
+---
+title: "Day 1"
+output:
+  html_document:
+    theme: paper
+    highlight: pygments
+    toc: true
+    toc_float:
+      collapsed: true
+      smooth_scroll: true
+---
+```{css echo=FALSE}
+.red { 
+  color: red;
+  padding-top: 0;
+  margin-top: -15px;
+  border-top-color: #f5f5f5;
+}
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+```
+
