@@ -1,7 +1,7 @@
 name: "EXGEN5449"
 output_dir: "."
 navbar:
-  title: "EXGEN5449"
+  title: "EXGEN 5449"
   left:
     - text: "Home"
       icon: fa-home
