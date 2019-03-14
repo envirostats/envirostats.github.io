@@ -1,8 +1,6 @@
 ---
 title: "Welcome"
 output:
-  word_document:
-    toc: no
   html_document:
     highlight: pygments
     theme: paper
