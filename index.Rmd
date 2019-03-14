@@ -1,13 +1,15 @@
 ---
 title: "Welcome"
 output:
+  word_document:
+    toc: no
   html_document:
-    theme: paper
     highlight: pygments
-    toc: false
+    theme: paper
+    toc: no
     toc_float:
-      collapsed: false
-      smooth_scroll: false
+      collapsed: no
+      smooth_scroll: no
 ---
 
 ```{r setup, include=FALSE}
@@ -16,7 +18,7 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Language for Statistical Computing in Business Analysis
 
-Hello and welcome to our course website! My name is [Stefan Schreiber](https://envirostats.ca/) and I am your course instructor for [EXGEN 5449](https://www.ualberta.ca/extension/continuing-education/courses/EXGEN-5449).
+Hello and welcome to our course website! My name is [Stefan Schreiber](https://envirostats.ca/) and I am your course instructor for [EXGEN 5449](https://www.ualberta.ca/extension/continuing-education/courses/EXGEN-5449). The room number is **ENT 2 570E** and the course runs from **Friday to Sunday from 9:00 am to 4:30 pm**.
 
 In this course, I will provide you with an introduction to the R programming language to perform data manipulation, data visualization and basic statistical analyses. Since this will be an introductory course, you won't need any prior experience in R, however, if you do, it will certainly be helpful. I designed the course to be hands-on, which means I will refrain from providing lecture-type presentations but instead spend time with you writing R code and answer questions as they appear. As with any other language, at first, it may seem impossible to ever get good at it but with time and practice you will become a data science wizard. 
 
