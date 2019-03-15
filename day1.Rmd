@@ -465,14 +465,19 @@ integers[-3:-5] # everything except position 3, 4, 5
 
 ```
 
-Not too difficult, is it? Now let's do something that you will likely encounter more frequently, i.e. subsetting based on a value, or range of values with help of relational operators:
+Not too difficult, is it? Now let's do something that you will likely encounter more frequently, i.e. subsetting based on a value, or range of values with help of relational (`?"<"`) and logical (`?"&"`) operators:
 
 ```{r}
 integers
+# relational operators
 integers[integers < 0]
 integers[integers <= 4]
 integers[integers == -14]
 integers[integers != -14]
+
+# relational and logical operators
+integers[integers < 8 & integers < -1]
+integers[integers >= 4 | integers <= -1]
 
 ```
 
@@ -594,6 +599,8 @@ df[df$A == c("A", "AC"),] # same result
 df[df$A %in% c("C", "A"),] # same result
 df[df$A == c("C", "A"),] # not the same result why?
 ```
+
+Also try subsetting `df` using the logical OR (`|`) and logical AND (`&`) as we did above for 1-dimensional atomic vectors.
 
 At this point remember how subsetting works, it is important to understand this. First we define a condition for which we get a logical vector. Then we feed this into the square brackets to select those items for which the condition was `TRUE`. Also remember R's behavior of vector recycling, meaning that it will execute a given operation by position:
 
