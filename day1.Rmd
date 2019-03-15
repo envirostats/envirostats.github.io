@@ -1,24 +1,878 @@
 ---
-title: "Day 1"
+title: "R Introduction"
+subtitle: "EXGEN5449 - Winter 2019"
+author: "Stefan Schreiber"
 output:
   html_document:
     theme: paper
     highlight: pygments
     toc: true
+    number_sections: true
+    toc_depth: 3
     toc_float:
       collapsed: true
       smooth_scroll: true
 ---
+
+<script>
+$(document).ready(function() {
+  $items = $('div#TOC li');
+  $items.each(function(idx) {
+    num_ul = $(this).parentsUntil('#TOC').length;
+    $(this).css({'text-indent': num_ul * 10, 'padding-left': 0});
+  });
+
+});
+</script>
+
 ```{css echo=FALSE}
 .red { 
   color: red;
   padding-top: 0;
-  margin-top: -15px;
+  margin-top: -20px;
   border-top-color: #f5f5f5;
 }
 ```
 
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE, collapse = TRUE)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+```
+# Installing R
+R can be downloaded from the **R-project** website (https://www.r-project.org/). The website is highly informative, easy to navigate and also provides a great resource for everything related to R. Make sure you check out the **Documentation** side bar as well. The great thing about R is that almost everything is available to you for free. Alright, let's head over to the R-project website (click the link above) and get R on our computers.
+
+## First contact
+Once the installation is completed open R by double clicking the program icon. You will see R's Graphical User Interface (GUI). Explore all menu items, familiarize yourself with it and start typing!
+
+## R as a simple calculator
+```{r basic-commands}
+2+2
+4-6
+sqrt(9)
+(10-8)*6
 ```
 
+As you can see R can be used like a simple calculator. However all outputs are not saved. If you want to save them, you can assign the output to a variable using the assignment operator `<-` and then pass it into another function:
+
+## Saving and printing output
+```{r assignment-operator}
+x <- 12+4-10
+mean(x)
+```
+
+Note that if you not calling `x` by typing it into the console or by passing it through another function (e.g. `sqrt()`), it will not print the output after assignment:
+```{r save-output}
+my_sequence <- 1:30
+```
+
+`my_sequence` is now saved in R's working memory (workspace) To call the output simply type it and hit enter:
+```{r print-output-error, error=TRUE}
+My_sequence
+```
+
+Wait a second... what does this error message mean?? R cannot find the object `My_sequence`. Working in R can cause a lot of head scratching if you not adhere to a clear and clean style of coding. As you likely have figured out by now, R knows the difference between upper and lower case letters, i.e. R is **case-sensitive**!!. Let's try again:
+
+```{r print-output}
+my_sequence
+
+```
+
+The numbers in square brackets `[]` simply mean the position of the element at the beginning of each line. So in this case it is `1` and `24`. 
+
+# R scripts
+Typing in the console however, is not good practice as you will always have to rewrite everything you want. To solve this problem we can write our code in scripts that can be saved. To open a new script, click `File > New script` and a script window will open. In the R script you can write everything you want R to do and make it reproducible for yourself and for people you are working together with on projects. You can then pass it to R by right-clicking anywhere in the code and click `Run line or selection`. A more efficient way to do this to use the short cut `Ctrl+R`. Also note that you should make use of the hash symbol `#` to annotate your code. R will ignore all lines starting with `#` when sent over to the console. Here is an example of how a simply R script could look like:
+
+```{r r-script-example}
+# Create sequence from -50 to 50 and save to my_seq
+x <- -50:50
+# take the cube of x and save as y
+y <- x^3
+#plot the results
+plot(x, y)
+```
+
+# Save workspace
+To save the script file navigate to `File > Save as` and save where you want it. Now since we are here, I have some recommendations if you decide to work in the R GUI:
+
+1. Create a folder where you want to work in on your hard drive
+2. Start up R and navigate to `File > Save Workspace...` and save a R workspace file (.RData) in the folder specified above. The workspace is where R stores your output for each session. You can see what's in your workspace by typing `ls()`
+3. Close R, navigate to the .RData file in your folder and double-click it. Now your folder is the working directory for that R session. That means that if you load data into R (we will do this later), you don't need to specify a file path.
+4. Open a new script file and save in your working folder
+5. When you finished your session make sure to save your script file first and then close R. When asked whether you want to `Save workspace image ?`, you can click `No` since you have everything in the script file.
+
+# How to get help
+At this point, we have already used some functions but there are more arguments we can pass into the functions. Whenever you encounter a new function such as `plot()`, I highly recommend to pull up the help file by typing:
+```{r plot-help, eval=F}
+?plot
+```
+
+The help files appear sometimes a bit cryptic but you will get used to it. Also note that if you encounter any specific problems or error messages, makes sure to check your spelling (remember R is case-sensitive). If you cannot resolve your problem it often helps to copy and paste the error message and Google it. In 95% of the cases someone has already asked your question on the internet. Another way to get help is through Question and Answer sites such as [Stack Overflow](https://stackoverflow.com/) (programming related) or [Cross Validated](https://stats.stackexchange.com/) (statistics related). But beware, make sure your read their guides as to what can be asked, how to search the site for answers (in 95% of the cases someone has already asked your question) and lastly how to ask questions. If you fail do to that, your question gets down-voted, likely not answered, and you may get snarky comments. So do your homework first before asking on these sites.
+
+# Atomic vectors
+All data in R is stored in some kind of **vector**. You can think of the most basic vector in R as a **1-dimensional** string of data with a given length, or from an Excel point of view as a contiguous row of cells containing data. Vectors can either be *atomic* (homogeneous) or *generic* (heterogeneous) in which case they are called **lists**. Atomic simply means that those vectors can only hold data of the **same basic type**, whereas generic means they can hold **various basic types**. This is an important concept to understand and we will explore this in a bit more detail here. There are **4** types we usually encounter in R: **double**, **integer**, **logical** and  **character**. There are two more types, *complex* and *raw*, however in statistics and data science we do not need them and hence we will not discuss them here. Also note that everything that enters R in form of data is called an *object*, and everything that happens to objects is the result of *function calls*.
+
+## 1-dimensional vectors
+### Double
+Let's create a simple vector of numbers by **c**oncatenating (or combining) them using the concatenate function `c()` and assigning the output to a new object using the assignment operator `<-`. But before we do that let's make it a habit that whenever we come across a new function to look up its documentation by typing`?function_name` into the console. Pull up the documentation for `?c` and `?"<-"`.
+
+```{r}
+numbers <- c(1, -2, -8.42, 5, 12.4)
+numbers
+```
+
+To see how many elements are in the `numbers` vector we use the `length()` function:
+
+```{r}
+length(numbers)
+```
+
+Based on the vector input, R classifies these numbers into one of the four basic data types mentioned above (*logical*, *integer*, *double* and *character*). We can check how R classified the input using the `typeof()` function:
+```{r}
+typeof(numbers)
+```
+
+**Note**: *double* is a computer term that stands for [double-precision floating point number](https://en.wikipedia.org/wiki/Double-precision_floating-point_format). We can simply think of *doubles* as **numeric** values, which include all real numbers ($\mathbb{R}$).
+
+### Integer
+If you want R to handle numbers as integers, you have to add an `L` behind the numbers:
+
+```{r}
+integers <- c(1L, 4L, 8L, -1L, -14L)
+integers
+length(integers)
+typeof(integers)
+```
+
+### Logical
+Often you also work with logical `TRUE` and `FALSE` statements (Booleans) when doing comparisons using relational operators (see also `?"<"` for more details):
+
+```{r}
+# using numbers
+3 < 4
+5 <= 4
+6 > 2
+3 >= 2
+5 == 5
+5 != 5
+
+# using characters
+fruits1 <- c("apples", "apples", "bananas", "peaches")
+fruits2 <- c("bananas", "apples", "peaches", "peaches")
+fruits1 == fruits2
+fruits1 != fruits2
+fruits1 < fruits2 # ??
+```
+
+What's happening here in the last statement? How can apples be smaller than bananas? Have a look at this example and predict what the outcome is before running the code! Hint: R is notorious for sorting alphabetically.
+
+```{r eval=F}
+words1 <- c("aab", "bab", "ccc")
+words2 <- c("aac", "bba", "cca")
+words1 < words2
+```
+
+You can also compare all elements in a vector using a relational operators. Let's do this with the two vectors we have created so far:
+
+```{r}
+# our integers vector
+integers
+logicals_int <- integers > 2 # assign the output to a new object
+logicals_int
+typeof(logicals_int)
+
+# our numbers vector
+numbers
+logicals_num <- numbers < -1 # assign the output to a new object
+logicals_num
+typeof(logicals_num)
+
+# Not good!
+logicals_num <- numbers <-1 # do we really want to do that?
+logicals_num # what has happened?
+typeof(logicals_num) # ???
+
+# Let's revert back to what we had before
+numbers <- c(1, -2, -8.42, 5, 12.4)
+
+```
+**Side note: assignment operator `<-` vs. equals operator `=`**
+
+In the last step above, we asked which elements of `numbers` are smaller than minus 1. The space here between `< -1` is very important. If this is typed incorrectly (as in the last example above), you will get something you likely did not want. As you can imagine if this goes unnoticed during an analysis, it can lead to wrong conclusions at worst and if did notice an unexpected results, it may take some time to figure out where it went wrong. To avoid this you could use the equals operator `=` instead of the assignment operator `<-` to assign a value to a variable name, however there are also potential issues with that. One of which is that the arguments in a function are set by the `=` operator, for example consider the function `rnorm()` which generates random numbers from the normal distribution with given mean and standard deviation. Let's look at the documentation first `?rnorm`. There you see that you can specify arguments to the function using `=`. In this case you cannot use the `<-` operator. Consider the following example:
+
+```{r}
+rnorm(10) # gives you 10 random sample from the normal distribution of mean = 0 and sd = 1
+rnorm(10, mean = 10, sd = 4) # works as expected
+```
+
+While in this case `mean` and `sd` are an arguments to the `rnorm` function, they are also functions of themselves outside of the `rnorm` function environment. Now if we were to use the assignment operator to set the value of an argument in a function, we can create problems that could take hours of trouble shooting if something doesn't work as expected:
+
+```{r}
+rnorm(10, mean <- 10, sd <- 4) # seems to work but let's check what type `mean` is now
+typeof(mean); typeof(sd) # not good!
+mean(c(1, 2, 3, 4)) # using means as a function still works though
+sd(c(1, 2, 3, 4)) # using sd as a function still works though
+```
+
+As you can see there are differences between those operators and you need to be aware of them. I personally would suggest using `<-` to assign values to variable names and not `=`. Now let's check what objects we have in our workspace and remove `mean` and `sd` from it using the `rm()` function (see `?rm`):
+
+```{r}
+ls() # show what's in the workspace
+rm(mean, sd) # remove `mean` and `sd` from the workspace
+ls() 
+typeof(mean); typeof(sd) # all good again
+```
+
+This also means that if you assign values to objects, make sure you pick a name that is not a function or object already. You can try this for example by typing `?your_object_name` and see if R has a help file for it and then also check your workspace (`ls()`) if you have already created this name earlier in your R session.
+
+OK, after this little detour let's get back to the basic data types in R. So far we looked at doubles, integers, and logicals but there is one more we need to look at.
+
+### Character
+Quite often we also want to store characters or text in vectors. This is done by specifying the character string with single or double quotation marks `"double quotation marks"` or `'single quotation marks'` but not mixing them `"do not mix quotation marks'`.
+
+```{r error=T}
+characters <- c("Thomas", "John", "Sarah", "my dog is the best", "good bye")
+characters
+typeof(characters)
+length(characters)
+```
+
+Can we do arithmetic with characters? There is only one way to find out!
+
+```{r error=T, class.error='red'}
+characters + 5
+```
+
+Clearly we cannot do arithmetic with characters but we can do string manipulation, which is also an important part of data science. String manipulation involves detecting characters in strings, replacing characters in strings, or removing characters from strings. But we will save this for tomorrow.
+
+
+## Augmented vectors
+So far we have looked at atomic vectors of the base type, `double`, `integer`, `logical`, `character` (we ignored `complex` and `raw` since we likely will never encounter them statistics). In order to identify what type a vector is made of, we use the `typeof()` function. Now we introduce two more types of vectors which do not directly belong to the base types but instead are built on top of the base types: factors (`?factor`) and dates (`?date`). We will call those vectors [augmented vectors](https://r4ds.had.co.nz/vectors.html#augmented-vectors) to be consistent with the terminology used in the [R for Data Science](https://r4ds.had.co.nz) book. *Augmented* means that these vectors contain additional attributes including a class and also may behave differently compared to the vectors on which they were built.
+
+### Factors
+Factors are used when you have categorical data for example you take three measurements for each of three treatments:
+
+```{r}
+treat <- c("A", "A", "A", "B", "B", "B", "C", "C", "C")
+treat
+attributes(treat) # note that `treat` vector has no attributes yet
+typeof(treat)
+class(treat)
+```
+
+Using the `factor()` function we can turn these character strings into categories with different levels:
+
+```{r}
+treat_f <- factor(treat, levels = c("A", "B", "C"))
+treat_f
+attributes(treat_f) # now we have a class and levels added as an additional attributes
+typeof(treat_f) # factors are built on the character type
+class(treat_f) # using class we can now identify `treat_f` as factor!
+
+```
+
+### Dates
+Dates are slightly more complicated since they need a starting date or reference date from which to start counting. Dates can also specify timezone as well as the actual time. By default dates are of the class `POSIXct` that represent the number of seconds since 1 January 1970. For this course, we will stick to the defaults and later use the *tidyverse* package [`lubridate`](https://lubridate.tidyverse.org/) to work with dates as it is much user friendly.
+
+```{r}
+dates <- c("2019-03-11", "2019-03-12", "2019-03-13")
+dates
+attributes(dates)
+typeof(dates)
+class(dates)
+```
+
+To change a date character string into a `Date` object we use `as.Date()` function:
+
+```{r}
+dates <- as.Date(dates)
+dates
+attributes(dates)
+typeof(dates)
+class(dates)
+```
+
+Since we now have a `Date` object we can also add or subtract days:
+
+```{r}
+dates + 60
+dates - 12
+
+# Get a more complicated date object: the system time of your computer
+system_time <- Sys.time()
+system_time
+attributes(system_time)
+typeof(system_time)
+class(system_time)
+```
+
+As you can see, making sure that your data is in the right format (in this case `as.Date()`) allows you to do the right things with it. We will encounter dates again when we plot time series data tomorrow.
+
+## `typeof()` vs. `class()`
+As you saw above I also used the `class()` function to get the information what type, or in this case, what class an object belongs to. Under the `class()` function `doubles` and `integers` are both treated as `numeric`. The main difference between the `typeof()` and `class()` functions is that `typeof()` is a **mutually exclusive classification** based on the **basic structure** of the object. For example, an integer vector will always be of the type `integer`. You cannot overwrite it to something else. The function `class()` on the other hand provides a more flexible way of classifying objects. This can be useful if you are a programmer or developer who wants to create functions for specific data types other than the base types. This type of programming is called  *object-oriented* programming. Consider the following example of how you can change the class of an object but not its basic type:
+
+```{r warning=T, error=T, class.error="red"}
+integers
+# attempting to overwrite the integer type
+typeof(integers) <- "character"
+```
+
+What does the above error message mean? Let's test whether we can change the class attribute of a vector.
+
+```{r warning=T, error=T, class.error="red"}
+# with `class()` this is possible (but not advisable, unless you know what you are doing ;))
+class(integers)
+class(integers) <- "my_new_class"
+class(integers)
+typeof(integers)
+integers
+integers <- unclass(integers) # removing class attribute
+integers
+class(integers)
+typeof(integers)
+```
+
+Here is another way of thinking about the *object-oriented* programming style. Suppose you are a programmer and your goal is to write functions that apply to various different types of cars. Also let's assume that there is a basic data type named `car`, which cannot be overwritten (similar to `logical`, `double`, `integer` etc.). So whenever you call `typeof()` on any car object it will evaluate to `car`. It makes sense now to develop additional classes on top of the basic types so that you can differentiate between different car objects. Say for example you have a car object named [mc_queen](https://en.wikipedia.org/wiki/Lightning_McQueen), calling `typeof(mc_queen)` would evaluate to `car`. Since [Lightning McQueen](https://en.wikipedia.org/wiki/Lightning_McQueen) is also a race car you decide to create a new class named `racer` for race car objects which could then be passed into the race-specific function `traction()` to change the traction behavior when taking high speed chicanes.
+
+Long story short, R programmers have already made extensive use of this in order to extend the statistical capabilities of R. Many different class objects have been developed to do various different statistical tasks. Throughout the course we continue to check the class and attributes of new objects to become more familiar with them.
+
+## Coercion
+### Implicit coercion (by R)
+So far we have always followed the rule of creating 1-dimensional atomic vectors using the same basic data type only. But what if you try to mix data types within a vector? If that happens, R will coerce (or change) them to the next appropriate data type according to the following hierarchy: `logical < integer < double < character`. Let's see for ourselves:
+
+```{r warning=T, error=T, class.error='red'}
+mix1 <- c(TRUE, FALSE, 1L, -12L)
+typeof(mix1)
+mix2 <- c(TRUE, FALSE, 1L, -12L, 4)
+typeof(mix2)
+mix3 <- c(TRUE, FALSE, 1L, -12L, 4, "what will happen next?")
+typeof(mix3)
+
+```
+
+This also happens if you, for example, pass a vector into a function that expected a different type. What would you expect if you pass our logical vector `logicals_int` to the `mean()` or `sum()` function?
+
+```{r}
+logicals_int
+typeof(logicals_int)
+logicals_mean <- mean(logicals_int)
+logicals_mean # proportion of 1s or TRUEs
+typeof(logicals_mean)
+logicals_sum <- sum(logicals_int) # sum of 1s or TRUEs
+logicals_sum # note that the data type is integer now
+```
+
+That makes sense! `TRUE, FALSE` can also be represented as  `1`,`0`. So when the `mean()` or `sum()` function evaluates a logical vector, it coerces it into an integer vector first and then executes the call. All of this happens internally and you will only hear back from R if it did not work. Now would it be sensible for the `sum()` function to take a character vector? Let's try it out using our `characters` vector from earlier:
+
+```{r error=T, class.error="red"}
+sum(characters)
+```
+
+No, this does not make sense and hence R will let you know with an error message. By the way, if a message is red, it does not always mean that it is an error message --- it could also be a warning, which means that R was able to execute the function call but something was not as expected. We will see one later today.
+
+### Explicit coercion (by you)
+Sometimes you also need to coerce vectors yourself during an analysis or check their type. For that, R has a series of functions known as *coercion* and *membership* functions. Coercion functions all start with `as.` and then you add the type you want, e.g. `as.character`. Membership functions all start with `is.` and then you add the type, e.g. `is.logical` resulting in a `TRUE` or `FALSE` response. Explore them in more detail by pulling up the documentation for those function with the `?` operator, then have a look at the following example: 
+
+```{r}
+# some more integers
+more_integers <- c(4, 1, 6, 4, 7, 8)
+typeof(more_integers)
+class(more_integers)
+
+# you can ask R if something is of a certain type or class and it will answer you!
+is.integer(more_integers)
+
+# explicitly coercing as integer
+more_integers <- as.integer(more_integers)
+typeof(more_integers)
+class(more_integers)
+is.integer(more_integers)
+
+# remember what happens with logical to integer
+logicals <- c(TRUE, FALSE, FALSE, FALSE, TRUE)
+typeof(logicals)
+as.integer(logicals)
+```
+
+
+## n-dimensional vectors
+### Matrix
+So far we have only talked about *1-dimensional* atomic vectors. However, the data we work with is usually stored in **2-dimensional** tables. In R a 2-dimensional atomic vector is called a `matrix`, whereas a n-dimensional object is called an `array`. Since matrices and arrays belong to the n-dimensional **atomic vector** type, their elements must be of the *same basic data type*. We can build matrices using the `matrix()` function (see `?matrix`) and arrays using the `array()` function. For this introduction however, we will not discuss arrays any further because they are rarely used. If you want to learn more about arrays, pull up their documentation `?array`. 
+
+```{r}
+mat_1 <- matrix(1:9, ncol = 3, byrow = TRUE) # 1:9 generates a sequence of integers
+mat_1
+typeof(mat_1) # basic type
+class(mat_1) # class
+is.atomic(mat_1) # atomic or not?!
+```
+
+Try to set the `byrow = TRUE` argument to `FALSE` and see what happens. Can you figure out what is going on? 
+
+```{r}
+mat_2 <- matrix(1:9, ncol = 3, byrow = FALSE) # 1:9 generates a sequence of integers
+mat_2
+```
+
+What will happen if we try to squeeze 10 numbers into a 3 column matrix?
+
+```{r warning=T, class.warning="red"}
+mat_bind <- matrix(1:10, ncol = 3, byrow = FALSE)
+```
+
+```{r}
+mat_bind
+```
+
+Can you decipher what triggered the **warning** message (not an error message)?
+
+You can also create a matrix by binding atomic vectors together in columns using the `cbind()` function (see `?cbind`). In this example, I build a matrix out of the different vector we have created so far:
+
+```{r error=T, warning=T, class.error="red", class.warning = "red"}
+mat_bind <- cbind(more_integers, characters, logicals, integers, numbers)
+```
+
+Look at the output below and troubleshoot why the warning was generated!
+
+```{r}
+mat_bind
+typeof(mat_bind)
+class(mat_bind)
+rownames(mat_bind) <- 1:6 # you can also give rows names (numbers of characters work)
+mat_bind
+typeof(mat_bind)
+class(mat_bind)
+
+# beside changing the row names you can also change the column names:
+colnames(mat_bind) <- c("A", "B", "C", "D", "E")
+mat_bind
+```
+
+Did you also see that R coerced all input vectors to characters? **Remember atomic vectors, matrices (and arrays) can only consist of the same data type!**
+
+```{r}
+is.atomic(mat_bind)
+```
+
+## Subsetting vectors
+We often need to extract or subset vectors for subsequent analyses. Here we briefly explore how this is can be done for atomic vectors (1 and n-dimensional) like the ones we have created so far. To subset vectors we us square brackets `[]` (see `?'['`). Next we can extract values by their position, by using relational operators, or by characters in case of character strings. Let's start with their position:
+
+```{r}
+integers
+integers[3] # by position
+integers[-2] # eveything except position 2
+integers[1:3] # select position 1, 2, 3
+integers[-3:-5] # everything except position 3, 4, 5
+
+```
+
+Not too difficult, is it? Now let's do something that you will likely encounter more frequently, i.e. subsetting based on a value, or range of values with help of relational operators:
+
+```{r}
+integers
+integers[integers < 0]
+integers[integers <= 4]
+integers[integers == -14]
+integers[integers != -14]
+
+```
+
+Matrices are subsetted in a similar fashion but we now have two dimensions, that is, rows and columns. Using the square brackets approach we now select element as `[row_position, column_position]`.
+
+```{r}
+mat_bind
+mat_bind[2, 3]
+mat_bind[1:3, 2:4]
+mat_bind[1, ]
+mat_bind[, 2]
+mat_bind[, "B"]
+```
+
+In this case, we won't be able to select elements based on relational operators because the matrix is of type `character`. Instead we will do this in the data frame section below.
+
+# Lists
+Alright! We made it to the *generic vectors* aka lists. Lists are very versatile and can store anything you want. The elements of a list can be comprised of various types of data types. In the following examples we explore the lists and especially a particular class of list: the data frame. 
+
+## List
+The list is a very useful object and many of R's outputs are stored as lists. For example when you run a liner model using the `lm()` function, R will output the summary as a list. We will have a look at this later though. For now let's learn how lists work.
+
+```{r}
+my_list <- list(A = c(LETTERS), B = c(1:10), C = c(runif(10)), D = "I can pack any item I want in a list")
+my_list
+typeof(my_list)
+class(my_list)
+is.atomic(my_list)
+
+```
+
+Lists can even include other lists:
+```{r}
+x1 <- list(c(1, 2), c(3, 4))
+x2 <- list(list(1, 2), list(3, 4))
+x3 <- list(1, list(2, list(3)))
+```
+
+```{r fig.cap="Structure of lists (from: [R for Data Science](https://r4ds.had.co.nz/vectors.html#lists))", echo=FALSE,  out.width="80%"}
+
+knitr::include_graphics("https://d33wubrfki0l68.cloudfront.net/5ba72e78f2df8568c1be82236659558b0e06904c/04521/diagrams/lists-structure.png")
+
+```
+
+### Subsetting lists
+List items can be extracted using the square bracket `[` and double square bracket `[[` operators. `[` will subsets the list and `[[` will extracts single elements from that list. The `str()` function is very useful for inspecting lists!
+
+```{r}
+new_list <- list(a = c("alpha", "beta"), b = c(1:5) , c = rnorm(4), d = list(x = 1, y = list(z1 = 2, z2 = "text")))
+str(new_list)
+
+# subset a new list that only contains variable `a`. There are three ways to achieve that:
+new_list$a
+new_list["a"]
+new_list[1]
+
+# extract element `beta` from variable `a`
+new_list$a[2]
+new_list[["a"]][2]
+new_list[[1]][2]
+
+# drilling down into the list to extract the first element of variable `z1`
+new_list$d$y$z1[1] 
+new_list[["d"]][["y"]][["z1"]][1] 
+new_list[[4]][[2]][[1]][1]
+
+# since there is only one element in `z1`, `[1]` can be omitted
+new_list$d$y$z1
+new_list[["d"]][["y"]][["z1"]]
+new_list[[4]][[2]][[1]]
+
+```
+
+While lists are super useful and versatile, they need some time to get used to. Now let's move on and have a look at a special type of list, the data frame.
+
+## Data frame
+The data frame is a special type of list with class `data.frame`. The main difference between lists and data frames is that all elements in a data frame must have the same length. Data frames look very much like Excel spreadsheets and are the most common data storage type in R.
+
+```{r error=TRUE, class.error =  "red"}
+data.frame(A = LETTERS[1:10], B = rnorm(6), C = sample(c(0, 1), 5, replace = TRUE))
+
+```
+
+As the error implies, columns in a data frame must have the **same length** if you create them manually in R. However, for the most part you load *external* data into R and any cell containing missing values will receive an `NA` (not available). 
+
+```{r error=TRUE, class.error =  "red"}
+df <- data.frame(A = LETTERS[1:6], B = rnorm(6), C = as.logical(sample(c(0, 1), 6, replace = TRUE)))
+df
+length(df) # note: length in a data frame represents the number of columns
+nrow(df) # note: to get the column length of a data frame use `nrow()`
+typeof(df)
+class(df)
+is.atomic(df)
+str(df)
+```
+
+Let's open up Excel and create a toy data set. Make sure you include some missing values (empty cells) as well as some numeric and character values. Now save the file as `.csv` (comma separated value) in the working directory and read it into R using `read.csv` and inspect it. 
+
+```{r eval=F}
+my_df <- read.csv("my_toy_dataset.csv")
+typeof(my_df)
+class(my_df)
+str(my_df)
+```
+
+Can you calculate the mean? What's the standard deviation? Can you visualize your data with the `plot()` function (see `?plot`)?
+
+### Subsetting data frames
+Subsetting data frames works similar to matrices except that we now also can select entire columns using the `$` operator. As before We can use the square brackets `[row_position, column_position]` as well as relational operators.
+
+```{r}
+typeof(df$B)
+typeof(df[1:4, 3])
+df[df$A == "D", ]
+df[df$C != 0, ]
+df[df$B > 0.5, ]
+df[df$A %in% c("A", "C"),] # %in% is used when you want to select/match elements based on an vector of elements see: ?'%in%
+df[df$A == c("A", "AC"),] # same result 
+df[df$A %in% c("C", "A"),] # same result
+df[df$A == c("C", "A"),] # not the same result why?
+```
+
+At this point remember how subsetting works, it is important to understand this. First we define a condition for which we get a logical vector. Then we feed this into the square brackets to select those items for which the condition was `TRUE`. Also remember R's behavior of vector recycling, meaning that it will execute a given operation by position:
+
+```{r}
+df$A # the column we want to select from
+logical_a <- df$A %in% c("C", "A") # the elements we want to select
+logical_a
+logical_b <- df$A == c("C", "A") # the elements we want to select 
+logical_b
+df[logical_a, ]
+df[logical_b, ]
+```
+
+So whenever you want to match a set of items within a vector use the `%in%` operator and not `==`! Otherwise you will very likely introduce errors without knowing!
+
+# Install packages
+Installing packages is also something you will come across very often. However, this is a pretty simple task and can get accomplished easily. Why don't we install the R fortunes package so that you can get yourself a `fortune()` :D 
+
+```{r eval=F}
+install.packages("fortunes")
+```
+```{r}
+require(fortunes)
+fortune()
+```
+
+# Installing R Studio
+Now since we have a very basic understanding of R and using the R console, let's download and install a program that makes working in R much easier, namely [R Studio](https://www.rstudio.com/products/rstudio/download/). Here is a short description from the software developer:
+
+> R Studio is an integrated development environment (IDE) for R. It includes a console, syntax-highlighting editor that supports direct code execution, as well as tools for plotting, history, debugging and workspace management. [Click here to see more RStudio features](https://www.rstudio.com/products/rstudio/features/).
+
+After everything is installed, open it up and explore the user interface. Click some buttons, write some code, save a script. 
+
+# Statistics
+Statistics is a branch of mathematics dealing with collection, manipulation, prediction and presentation of data. In the broadest sense the goal of statistics is to inform decision making by identifying genuine trends in datasets as well as predicting future outcomes from data. Statistics can be separated into descriptive and inferential statistics. See [here](https://en.wikipedia.org/wiki/Statistics) for more general information about statistics.
+
+# Descriptive statistics
+Whenever we collect data the first step is to **visualize** what we have collected. This is the most important step in order to better understand what's in your data. You need to get a feeling of how the data looks and behaves. Some important descriptive measures are the median and the mean to find the center of the data as well as some measure of spread (or variability) that is present around the center of the data. The latter can be achieved by percentiles (when using the median) or by the standard deviation (when using the mean).
+
+## Central tendency
+### Mean
+The most commonly used measures to describe the center of the data are the mean and the median. The mean is simply the sum of elements in a vector divided by the length of the vector. **The mean is also the simplest model we can fit to data**. For example we can measure the height of people in this room and say that on average the people in this room are 171.5 cm. Although no one is this room likely is exactly 171.5 cm, taking the mean represents a simple way of summarizing or *modeling* the average height of people in this room. In R the mean can be calculated using the `mean()` function (`?mean`).
+
+```{r}
+heights <- c(185, 163, 180, 155, 176, 170)
+mean(heights)
+
+# or by hand
+sum(heights) / length(heights)
+
+```
+
+Let's have a look at it visually:
+
+```{r echo=F, message=F}
+require(ggplot2)
+plot.mean <- function(x) {
+  m <- mean(x)
+  c(y = m, ymin = m, ymax = m)
+}
+
+df_ht <- data.frame(Classroom = "ENT 2 570E", Height = heights)
+
+ggplot(df_ht, aes(x = Classroom, y = Height)) + 
+  geom_point() + 
+  stat_summary(fun.data = "plot.mean", color = "red", geom = "errorbar") 
+```
+
+
+### Median
+The mean represents the center of the data if the distribution of the data is approximately normal (or symmetrical). If for example, the distribution is asymmetrical (or skewed), the median describes the middle of the data more accurately. The median simply takes the middle value if the sample size is odd, or if it is even, it will take the average of the two middle values. Suppose you want to know the income distribution of people at the University of Alberta (students and employees alike) and ask how much they earn per year. You go out and take a random sample of 10 people on campus and came back with this dataset below. Would it be more accurate to take the mean or the median?
+
+```{r}
+income <- c(30000, 45000, 50000, 33000, 48000, 39000, 41000, 48000, 140000, 90000)
+mean(income)
+median(income)
+
+# in this case the sample size is even, so the median the average of the two middle values of the ordered vector
+sort(income)
+mean(c(45000, 48000))
+mean(income) - median(income)
+```
+
+Let's look at it visually:
+
+```{r echo=F, message=F}
+require(ggplot2)
+plot.mean <- function(x) {
+  m <- mean(x)
+  c(y = m, ymin = m, ymax = m)
+}
+
+plot.median <- function(x) {
+  m <- median(x)
+  c(y = m, ymin = m, ymax = m)
+}
+
+df_inc <- data.frame(Campus = "UofA", Income = income)
+
+ggplot(df_inc, aes(x = Campus, y = Income)) + 
+  geom_point() + 
+  stat_summary(fun.data = "plot.mean", color = "red", geom = "errorbar") +
+  stat_summary(fun.data = "plot.median", color = "green", geom = "errorbar") 
+```
+
+As you can see there is a difference between the mean and the median of \$9,900. Which one would you report and why?
+
+## Measure of spread
+Now since we are able to calculate the mean and the median we also need a measure of spread around them. Why do you think that is? Why not simply reporting the mean or median only?
+
+### Standard deviation
+Before we talk about the standard deviation, let's back up for a bit and think about how we could quantify the deviation around the mean? One way would be to calculate the deviance of each point to the mean, such as:
+
+```{r}
+deviation <- heights - mean(heights)
+deviation
+```
+Now we could add those individual deviations up to get the total deviation:
+
+```{r}
+sum(deviation)
+
+```
+
+Why is this zero? What can we do? We could square the distances first before adding them. That ensure the values are positive:
+
+```{r}
+deviation_sq <- (heights - mean(heights))^2
+sum(deviation_sq)
+```
+
+This is a huge number! Let's continue and take the average of squared deviations first and then add them up. This makes more sense since we also wouldn't want to use the *total* height of people in the class room example to understand the height distribution. OK then let's continue and simply divide the squared deviations by the length of the sample size minus one (explanation will follow) and then take the sum:
+
+```{r}
+sum(deviation_sq / (length(deviation_sq) - 1))
+```
+
+Still a huge number and practically not really useful to understand the variation but in any case this number is also know as the [variance](https://en.wikipedia.org/wiki/Variance):
+```{r}
+var(heights) # see `?var` for details on the n-1 part and go from there
+
+```
+
+However, since we squared the average deviations in the beginning, we could reverse this now by taking the square root:
+
+```{r}
+sqrt(var(heights))
+```
+
+This looks better now! It seems like that the deviation (or spread) of height is 11.1 cm. This number is also know as the [standard deviation](https://en.wikipedia.org/wiki/Standard_deviation)!
+
+```{r}
+sd(heights) # remember to check `?sd`
+```
+
+How does this look visually?
+
+```{r echo=F, message=F}
+require(ggplot2)
+require(dplyr)
+df_ht_m <- df_ht %>% group_by(Classroom) %>% summarise(m=mean(Height), s=sd(Height))
+ggplot(df_ht_m, aes(Classroom, m)) + geom_pointrange(aes(ymin = m-s, ymax = m+s)) + scale_y_continuous(limits=c(155,185)) + labs(y="Height (cm)")
+
+```
+
+## Histograms
+Histograms are really great tool to visualize distributions. The way the work is that they create discrete classes (or bins) and count the number of samples that fall within that bin. Here we use the `diamonds` dataset which comes with the `ggplot2` package. This dataset describes 50,000 round cut diamonds (`?diamonds`).  
+
+```{r echo = F, message=F}
+ggplot(diamonds, aes(carat)) +
+  geom_histogram() + ggtitle("Histogram (diamonds dataset)")
+```
+
+## Boxplots
+Boxplots are another very useful tool to inspect data (`diamonds` datatset). The box represents the boundaries in which 50% of the data falls. The end point of the vertical lines (or whiskers) represent either the minimum or maximum value in the dataset or a cutoff value defined as 1.5x the inter-quartile range (will discuss in class). All values outside the cutoff are displayed as dots and often considered "outliers". 
+
+```{r echo = F, message=F}
+ggplot(diamonds, aes(factor(0), carat)) +
+  geom_boxplot()+ ggtitle("Boxplot diamonds dataset")+
+   theme(axis.title.x=element_blank(),
+    axis.text.x=element_blank(),
+    axis.ticks.x=element_blank())
+```
+
+## Scatter plots
+Scatter plots (or xy plots) are a great way to visualize relationships within the data. In this example we look at the length to width relationship of flower [petals](https://en.wikipedia.org/wiki/Petal) from three different [iris](https://en.wikipedia.org/wiki/Iris_(plant)) species. This dataset is pre-loaded into R and can be accessed by typing `iris` into the console. More information can be found under `?iris`.
+
+```{r echo =F, message=F}
+ggplot(iris, aes(Petal.Length, Petal.Width)) +
+  geom_point(aes(col = Species)) + ggtitle("Scatter plot (iris dataset)")
+```
+
+# Probability distributions
+[Probability distributions](https://en.wikipedia.org/wiki/Probability_distribution) are mathematical functions that provide probabilities of occurrences of different possible outcomes in an experiment. Probability distributions can be divided into discrete and continuous distributions.
+
+## Binomial
+Suppose you are flipping a fair coin. What is the probability of the coin coming up heads? Such an experiment with a binary outcome is called a [Bernoulli trial](https://en.wikipedia.org/wiki/Bernoulli_trial). The outcomes of multiple independent Bernoulli trials can be calculated using the [Binomial distribution](https://en.wikipedia.org/wiki/Binomial_distribution) with parameters $B(n,p)$, where $n$ is the number of independent Bernoulli trials and $p$ the probability of success, which in our coin example is heads with a probability of 0.5. To calculate the number of successes $k$ over $n$ trials we use the binomial probability mass function. $${n \choose k}p^k(1-p)^{(n-k)}$$ But before we do that let us first use R to generate some random binomial-distributed numbers using the `rbinom()` function (see `?rbinom`):
+
+```{r}
+# a single fair coin toss, i.e, one Bernoulli trial
+rbinom(1, 1, 0.5) # keep repeating this step and observe
+
+# instead if flipping one coin we can also flip many coins simulatnously 
+rbinom(10, 1, 0.5) # keep repeating this step and observe
+
+# now let's try one coin tossed repeatedly 10 times
+rbinom(1, 10, 0.5) # keep repeating this step and observe
+```
+
+Can you figure out what's happening the last command above? R simply adds the number of 1s (which we will call heads) over the 10 coin flips. So what do you think is the probability of seeing on average 5 heads in 10 coin flips? Well, let's find out through simulation by increasing the number of coins to 100,000:
+
+
+```{r}
+flips <- rbinom(100000, 10, 0.5)
+# number of heads over 10 trials for first 20 of the 100,000 coins
+flips[1:20]
+length(flips)
+```
+
+Remember the relational operators `==`, `<`, `>`, etc. from above? Now we could ask R which of the 100,000 coin flips resulted in 5 heads:
+
+```{r}
+flips_5 <- flips == 5
+flips_5[1:20]
+```
+
+Now also remember from above that R treats `TRUE` as 1 and `FALSE` as 0. So would should be able to take the mean of `flips_5` to get the fraction of TRUEs (or 1s) over the total length of 100,000:
+
+```{r}
+mean(flips_5)
+```
+
+In a histogram our simulation (`flips`) would look like this:
+
+```{r }
+flips_df <- as.data.frame(flips)
+ggplot(flips_df, aes(flips)) + geom_histogram(bins = 11, binwidth = .5) + scale_x_continuous(breaks = 0:10)
+```
+
+So how does the simulation compare if we calculate the exact probability using the probability mass function of the binomial distribution? $${n \choose k}p^k(1-p)^{(n-k)}$$
+
+```{r}
+n <- 10 # number of trials
+k <- 5 # number of successes (heads)
+p <- 0.5 # probability of success in each trial
+
+choose(n, k) * p^k * (1 - p)^(n - k)
+mean(flips_5)
+```
+
+In R we can also use the `dbinom()` function (see: ?`dbinom`) to calculate the exact probability of success for a given number of trials:
+
+```{r}
+dbinom(5, 10, 0.5)
+```
+
+Sometimes we may also need to know what is the probability of observing 5 or less heads? This can be done using the `pbinom()` function. We could also use our `flips` simulation and the `mean` function:
+
+```{r}
+pbinom(5, 10, 0.5) # cumulative distribution function
+
+mean(flips <= 5)
+```
+
+
+```{r eval=F, echo=F}
+
+# Calculate the probability that 2 are heads using dbinom
+dbinom(2, 10, .3)
+# Confirm your answer with a simulation using rbinom
+mean(rbinom(10000, 10, .3) == 2)
+
+
+# Calculate the probability that at least five coins are heads
+1-pbinom(4, 10, 0.3)
+
+# Confirm your answer with a simulation of 10,000 trials
+mean(rbinom(10000, 10, 0.3) >= 5)
+```
+
+## Gaussian
+There are many, many other distributions that allow to calculate probabilities for various types of data generating processes, one of which is the Gaussian distribution (or normal distribution) as well as the t-distribution. We will encounter the Gaussian and t-distribution when we talk about t-tests, analysis of variance, and regression. Similar to the binomial distribution there are functions in R to generate random numbers and calculate probabilities for these distributions (see: `?rnorm` and `?rt` for details).
