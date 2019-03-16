@@ -526,6 +526,8 @@ $(document).ready(function() {
 </div>
 <div id="maps-for-tomas" class="section level1">
 <h1><span class="header-section-number">2</span> Maps for Tomas</h1>
+<div id="using-latitude-and-longitude-data" class="section level2">
+<h2><span class="header-section-number">2.1</span> Using latitude and longitude data</h2>
 <div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="co"># load packages</span></a>
 <a class="sourceLine" id="cb2-2" title="2"><span class="kw">require</span>(maps)</a>
 <a class="sourceLine" id="cb2-3" title="3"><span class="kw">require</span>(mapdata)</a>
@@ -573,6 +575,11 @@ $(document).ready(function() {
 <a class="sourceLine" id="cb3-18" title="18"><span class="st">  </span><span class="kw">geom_text</span>(<span class="dt">data =</span> can_cities2, <span class="kw">aes</span>(<span class="dt">x =</span> long <span class="op">+</span><span class="st"> </span><span class="dv">5</span>, <span class="dt">y =</span> lat <span class="op">+</span><span class="st"> </span><span class="fl">.8</span>, <span class="dt">label =</span> city))</a></code></pre></div>
 <p><img src="day2_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
 <p><strong>Excercise</strong>: Can you find the population size for each cities and add this to the tibble <code>can_cities</code>? Then use this information to let the size of the poplulation be shown as differently sized points.</p>
+</div>
+<div id="using-google-maps" class="section level2">
+<h2><span class="header-section-number">2.2</span> Using Google maps</h2>
+<p>There is a great R package called <code>ggmap</code> which allows you to do fantastic maps in R. Please have a look at the <a href="">developers source site</a> as it has important information. Furthermore have look at <a href="https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf">this article</a> in the R Journal about the package <code>ggmap</code>. It is a little “dated” (2013) but will still give you an idea what is possible.</p>
+</div>
 </div>
 
 

@@ -57,7 +57,7 @@ library(tidyverse)
 Alright with that being out of the way let's head over to the [tidyverse](https://www.tidyverse.org/) website and start exploring what we can do! Then start working on a few examples from the [R for Data Science](https://r4ds.had.co.nz/) book.
 
 # Maps for Tomas
-
+## Using latitude and longitude data
 ```{r message=FALSE}
 # load packages
 require(maps)
@@ -100,3 +100,7 @@ ggplot() +
 ```
 
 **Excercise**: Can you find the population size for each cities and add this to the tibble `can_cities`? Then use this information to let the size of the poplulation be shown as differently sized points.
+
+
+## Using Google maps
+There is a great R package called `ggmap` which allows you to do fantastic maps in R. Please have a look at the [developers source site]() as it has important information. Furthermore have look at [this article](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) in the R Journal about the package `ggmap`. It is a little "dated" (2013) but will still give you an idea what is possible.
