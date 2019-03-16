@@ -667,15 +667,15 @@ $(document).ready(function() {
 <p><strong>Side note: assignment operator <code>&lt;-</code> vs. equals operator <code>=</code></strong></p>
 <p>In the last step above, we asked which elements of <code>numbers</code> are smaller than minus 1. The space here between <code>&lt; -1</code> is very important. If this is typed incorrectly (as in the last example above), you will get something you likely did not want. As you can imagine if this goes unnoticed during an analysis, it can lead to wrong conclusions at worst and if did notice an unexpected results, it may take some time to figure out where it went wrong. To avoid this you could use the equals operator <code>=</code> instead of the assignment operator <code>&lt;-</code> to assign a value to a variable name, however there are also potential issues with that. One of which is that the arguments in a function are set by the <code>=</code> operator, for example consider the function <code>rnorm()</code> which generates random numbers from the normal distribution with given mean and standard deviation. Let’s look at the documentation first <code>?rnorm</code>. There you see that you can specify arguments to the function using <code>=</code>. In this case you cannot use the <code>&lt;-</code> operator. Consider the following example:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb15-1" title="1"><span class="kw">rnorm</span>(<span class="dv">10</span>) <span class="co"># gives you 10 random sample from the normal distribution of mean = 0 and sd = 1</span></a>
-<a class="sourceLine" id="cb15-2" title="2"><span class="co">#&gt;  [1]  1.7424980  0.8201671  0.4942502 -0.1668366  0.1706409 -1.5857788</span></a>
-<a class="sourceLine" id="cb15-3" title="3"><span class="co">#&gt;  [7] -0.5849720  0.9995446  0.7539289  1.2774377</span></a>
+<a class="sourceLine" id="cb15-2" title="2"><span class="co">#&gt;  [1] -0.7813784 -0.3466188  1.2834538 -1.9425122  1.1473229 -0.4561693</span></a>
+<a class="sourceLine" id="cb15-3" title="3"><span class="co">#&gt;  [7] -0.7766670  1.4111649 -0.3362467 -0.7327584</span></a>
 <a class="sourceLine" id="cb15-4" title="4"><span class="kw">rnorm</span>(<span class="dv">10</span>, <span class="dt">mean =</span> <span class="dv">10</span>, <span class="dt">sd =</span> <span class="dv">4</span>) <span class="co"># works as expected</span></a>
-<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt;  [1] 13.721318 10.583474 14.382817 12.039056  8.579592  5.089316 10.565822</span></a>
-<a class="sourceLine" id="cb15-6" title="6"><span class="co">#&gt;  [8] 12.594434  8.877935  9.416387</span></a></code></pre></div>
+<a class="sourceLine" id="cb15-5" title="5"><span class="co">#&gt;  [1] 10.287662 13.962872 13.054495 17.838939 15.606520  8.008732  7.280632</span></a>
+<a class="sourceLine" id="cb15-6" title="6"><span class="co">#&gt;  [8] 18.023907 11.232967 10.477525</span></a></code></pre></div>
 <p>While in this case <code>mean</code> and <code>sd</code> are an arguments to the <code>rnorm</code> function, they are also functions of themselves outside of the <code>rnorm</code> function environment. Now if we were to use the assignment operator to set the value of an argument in a function, we can create problems that could take hours of trouble shooting if something doesn’t work as expected:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb16-1" title="1"><span class="kw">rnorm</span>(<span class="dv">10</span>, mean &lt;-<span class="st"> </span><span class="dv">10</span>, sd &lt;-<span class="st"> </span><span class="dv">4</span>) <span class="co"># seems to work but let&#39;s check what type `mean` is now</span></a>
-<a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt;  [1]  6.599181  6.706385 10.761127 13.949565  4.825798 14.713139 12.195730</span></a>
-<a class="sourceLine" id="cb16-3" title="3"><span class="co">#&gt;  [8]  9.302259  7.361492  8.816279</span></a>
+<a class="sourceLine" id="cb16-2" title="2"><span class="co">#&gt;  [1]  9.498728 11.780199  6.789546 14.029486  2.689283  3.914932  5.760154</span></a>
+<a class="sourceLine" id="cb16-3" title="3"><span class="co">#&gt;  [8]  7.700236 14.251161  8.165307</span></a>
 <a class="sourceLine" id="cb16-4" title="4"><span class="kw">typeof</span>(mean); <span class="kw">typeof</span>(sd) <span class="co"># not good!</span></a>
 <a class="sourceLine" id="cb16-5" title="5"><span class="co">#&gt; [1] &quot;double&quot;</span></a>
 <a class="sourceLine" id="cb16-6" title="6"><span class="co">#&gt; [1] &quot;double&quot;</span></a>
@@ -779,7 +779,7 @@ $(document).ready(function() {
 <a class="sourceLine" id="cb25-6" title="6"><span class="co"># Get a more complicated date object: the system time of your computer</span></a>
 <a class="sourceLine" id="cb25-7" title="7">system_time &lt;-<span class="st"> </span><span class="kw">Sys.time</span>()</a>
 <a class="sourceLine" id="cb25-8" title="8">system_time</a>
-<a class="sourceLine" id="cb25-9" title="9"><span class="co">#&gt; [1] &quot;2019-03-15 07:49:15 MDT&quot;</span></a>
+<a class="sourceLine" id="cb25-9" title="9"><span class="co">#&gt; [1] &quot;2019-03-15 23:38:19 MDT&quot;</span></a>
 <a class="sourceLine" id="cb25-10" title="10"><span class="kw">attributes</span>(system_time)</a>
 <a class="sourceLine" id="cb25-11" title="11"><span class="co">#&gt; $class</span></a>
 <a class="sourceLine" id="cb25-12" title="12"><span class="co">#&gt; [1] &quot;POSIXct&quot; &quot;POSIXt&quot;</span></a>
@@ -1044,8 +1044,8 @@ $(document).ready(function() {
 <a class="sourceLine" id="cb46-8" title="8"><span class="co">#&gt;  [1]  1  2  3  4  5  6  7  8  9 10</span></a>
 <a class="sourceLine" id="cb46-9" title="9"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb46-10" title="10"><span class="co">#&gt; $C</span></a>
-<a class="sourceLine" id="cb46-11" title="11"><span class="co">#&gt;  [1] 0.819062348 0.757737700 0.460076923 0.798066377 0.068379085</span></a>
-<a class="sourceLine" id="cb46-12" title="12"><span class="co">#&gt;  [6] 0.102099861 0.009850186 0.833954330 0.160210822 0.411078101</span></a>
+<a class="sourceLine" id="cb46-11" title="11"><span class="co">#&gt;  [1] 0.33889926 0.46227948 0.67240877 0.85060582 0.08162871 0.03901438</span></a>
+<a class="sourceLine" id="cb46-12" title="12"><span class="co">#&gt;  [7] 0.61280503 0.14936150 0.82670439 0.53011728</span></a>
 <a class="sourceLine" id="cb46-13" title="13"><span class="co">#&gt; </span></a>
 <a class="sourceLine" id="cb46-14" title="14"><span class="co">#&gt; $D</span></a>
 <a class="sourceLine" id="cb46-15" title="15"><span class="co">#&gt; [1] &quot;I can pack any item I want in a list&quot;</span></a>
@@ -1073,7 +1073,7 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb48-3" title="3"><span class="co">#&gt; List of 4</span></a>
 <a class="sourceLine" id="cb48-4" title="4"><span class="co">#&gt;  $ a: chr [1:2] &quot;alpha&quot; &quot;beta&quot;</span></a>
 <a class="sourceLine" id="cb48-5" title="5"><span class="co">#&gt;  $ b: int [1:5] 1 2 3 4 5</span></a>
-<a class="sourceLine" id="cb48-6" title="6"><span class="co">#&gt;  $ c: num [1:4] -0.643 -0.557 0.542 -0.285</span></a>
+<a class="sourceLine" id="cb48-6" title="6"><span class="co">#&gt;  $ c: num [1:4] -1.472 -0.738 -0.692 0.311</span></a>
 <a class="sourceLine" id="cb48-7" title="7"><span class="co">#&gt;  $ d:List of 2</span></a>
 <a class="sourceLine" id="cb48-8" title="8"><span class="co">#&gt;   ..$ x: num 1</span></a>
 <a class="sourceLine" id="cb48-9" title="9"><span class="co">#&gt;   ..$ y:List of 2</span></a>
@@ -1124,13 +1124,13 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <p>As the error implies, columns in a data frame must have the <strong>same length</strong> if you create them manually in R. However, for the most part you load <em>external</em> data into R and any cell containing missing values will receive an <code>NA</code> (not available).</p>
 <div class="sourceCode" id="cb51"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb51-1" title="1">df &lt;-<span class="st"> </span><span class="kw">data.frame</span>(<span class="dt">A =</span> LETTERS[<span class="dv">1</span><span class="op">:</span><span class="dv">6</span>], <span class="dt">B =</span> <span class="kw">rnorm</span>(<span class="dv">6</span>), <span class="dt">C =</span> <span class="kw">as.logical</span>(<span class="kw">sample</span>(<span class="kw">c</span>(<span class="dv">0</span>, <span class="dv">1</span>), <span class="dv">6</span>, <span class="dt">replace =</span> <span class="ot">TRUE</span>)))</a>
 <a class="sourceLine" id="cb51-2" title="2">df</a>
-<a class="sourceLine" id="cb51-3" title="3"><span class="co">#&gt;   A          B     C</span></a>
-<a class="sourceLine" id="cb51-4" title="4"><span class="co">#&gt; 1 A -1.0229424  TRUE</span></a>
-<a class="sourceLine" id="cb51-5" title="5"><span class="co">#&gt; 2 B  1.6617892 FALSE</span></a>
-<a class="sourceLine" id="cb51-6" title="6"><span class="co">#&gt; 3 C -0.2029711 FALSE</span></a>
-<a class="sourceLine" id="cb51-7" title="7"><span class="co">#&gt; 4 D -2.2177306  TRUE</span></a>
-<a class="sourceLine" id="cb51-8" title="8"><span class="co">#&gt; 5 E  0.9174521  TRUE</span></a>
-<a class="sourceLine" id="cb51-9" title="9"><span class="co">#&gt; 6 F  0.5760049  TRUE</span></a>
+<a class="sourceLine" id="cb51-3" title="3"><span class="co">#&gt;   A           B     C</span></a>
+<a class="sourceLine" id="cb51-4" title="4"><span class="co">#&gt; 1 A -0.61143144  TRUE</span></a>
+<a class="sourceLine" id="cb51-5" title="5"><span class="co">#&gt; 2 B -2.23547900 FALSE</span></a>
+<a class="sourceLine" id="cb51-6" title="6"><span class="co">#&gt; 3 C -0.50579686  TRUE</span></a>
+<a class="sourceLine" id="cb51-7" title="7"><span class="co">#&gt; 4 D  0.06163945  TRUE</span></a>
+<a class="sourceLine" id="cb51-8" title="8"><span class="co">#&gt; 5 E -0.33017301 FALSE</span></a>
+<a class="sourceLine" id="cb51-9" title="9"><span class="co">#&gt; 6 F  0.50839793 FALSE</span></a>
 <a class="sourceLine" id="cb51-10" title="10"><span class="kw">length</span>(df) <span class="co"># note: length in a data frame represents the number of columns</span></a>
 <a class="sourceLine" id="cb51-11" title="11"><span class="co">#&gt; [1] 3</span></a>
 <a class="sourceLine" id="cb51-12" title="12"><span class="kw">nrow</span>(df) <span class="co"># note: to get the column length of a data frame use `nrow()`</span></a>
@@ -1144,8 +1144,8 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb51-20" title="20"><span class="kw">str</span>(df)</a>
 <a class="sourceLine" id="cb51-21" title="21"><span class="co">#&gt; &#39;data.frame&#39;:    6 obs. of  3 variables:</span></a>
 <a class="sourceLine" id="cb51-22" title="22"><span class="co">#&gt;  $ A: Factor w/ 6 levels &quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;D&quot;,..: 1 2 3 4 5 6</span></a>
-<a class="sourceLine" id="cb51-23" title="23"><span class="co">#&gt;  $ B: num  -1.023 1.662 -0.203 -2.218 0.917 ...</span></a>
-<a class="sourceLine" id="cb51-24" title="24"><span class="co">#&gt;  $ C: logi  TRUE FALSE FALSE TRUE TRUE TRUE</span></a></code></pre></div>
+<a class="sourceLine" id="cb51-23" title="23"><span class="co">#&gt;  $ B: num  -0.6114 -2.2355 -0.5058 0.0616 -0.3302 ...</span></a>
+<a class="sourceLine" id="cb51-24" title="24"><span class="co">#&gt;  $ C: logi  TRUE FALSE TRUE TRUE FALSE FALSE</span></a></code></pre></div>
 <p>Let’s open up Excel and create a toy data set. Make sure you include some missing values (empty cells) as well as some numeric and character values. Now save the file as <code>.csv</code> (comma separated value) in the working directory and read it into R using <code>read.csv</code> and inspect it.</p>
 <div class="sourceCode" id="cb52"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb52-1" title="1">my_df &lt;-<span class="st"> </span><span class="kw">read.csv</span>(<span class="st">&quot;my_toy_dataset.csv&quot;</span>)</a>
 <a class="sourceLine" id="cb52-2" title="2"><span class="kw">typeof</span>(my_df)</a>
@@ -1160,33 +1160,30 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb53-3" title="3"><span class="kw">typeof</span>(df[<span class="dv">1</span><span class="op">:</span><span class="dv">4</span>, <span class="dv">3</span>])</a>
 <a class="sourceLine" id="cb53-4" title="4"><span class="co">#&gt; [1] &quot;logical&quot;</span></a>
 <a class="sourceLine" id="cb53-5" title="5">df[df<span class="op">$</span>A <span class="op">==</span><span class="st"> &quot;D&quot;</span>, ]</a>
-<a class="sourceLine" id="cb53-6" title="6"><span class="co">#&gt;   A         B    C</span></a>
-<a class="sourceLine" id="cb53-7" title="7"><span class="co">#&gt; 4 D -2.217731 TRUE</span></a>
+<a class="sourceLine" id="cb53-6" title="6"><span class="co">#&gt;   A          B    C</span></a>
+<a class="sourceLine" id="cb53-7" title="7"><span class="co">#&gt; 4 D 0.06163945 TRUE</span></a>
 <a class="sourceLine" id="cb53-8" title="8">df[df<span class="op">$</span>C <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>, ]</a>
-<a class="sourceLine" id="cb53-9" title="9"><span class="co">#&gt;   A          B    C</span></a>
-<a class="sourceLine" id="cb53-10" title="10"><span class="co">#&gt; 1 A -1.0229424 TRUE</span></a>
-<a class="sourceLine" id="cb53-11" title="11"><span class="co">#&gt; 4 D -2.2177306 TRUE</span></a>
-<a class="sourceLine" id="cb53-12" title="12"><span class="co">#&gt; 5 E  0.9174521 TRUE</span></a>
-<a class="sourceLine" id="cb53-13" title="13"><span class="co">#&gt; 6 F  0.5760049 TRUE</span></a>
-<a class="sourceLine" id="cb53-14" title="14">df[df<span class="op">$</span>B <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, ]</a>
-<a class="sourceLine" id="cb53-15" title="15"><span class="co">#&gt;   A         B     C</span></a>
-<a class="sourceLine" id="cb53-16" title="16"><span class="co">#&gt; 2 B 1.6617892 FALSE</span></a>
-<a class="sourceLine" id="cb53-17" title="17"><span class="co">#&gt; 5 E 0.9174521  TRUE</span></a>
-<a class="sourceLine" id="cb53-18" title="18"><span class="co">#&gt; 6 F 0.5760049  TRUE</span></a>
-<a class="sourceLine" id="cb53-19" title="19">df[df<span class="op">$</span>A <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>),] <span class="co"># %in% is used when you want to select/match elements based on an vector of elements see: ?&#39;%in%</span></a>
-<a class="sourceLine" id="cb53-20" title="20"><span class="co">#&gt;   A          B     C</span></a>
-<a class="sourceLine" id="cb53-21" title="21"><span class="co">#&gt; 1 A -1.0229424  TRUE</span></a>
-<a class="sourceLine" id="cb53-22" title="22"><span class="co">#&gt; 3 C -0.2029711 FALSE</span></a>
-<a class="sourceLine" id="cb53-23" title="23">df[df<span class="op">$</span>A <span class="op">==</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AC&quot;</span>),] <span class="co"># same result </span></a>
-<a class="sourceLine" id="cb53-24" title="24"><span class="co">#&gt;   A         B    C</span></a>
-<a class="sourceLine" id="cb53-25" title="25"><span class="co">#&gt; 1 A -1.022942 TRUE</span></a>
-<a class="sourceLine" id="cb53-26" title="26">df[df<span class="op">$</span>A <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;A&quot;</span>),] <span class="co"># same result</span></a>
-<a class="sourceLine" id="cb53-27" title="27"><span class="co">#&gt;   A          B     C</span></a>
-<a class="sourceLine" id="cb53-28" title="28"><span class="co">#&gt; 1 A -1.0229424  TRUE</span></a>
-<a class="sourceLine" id="cb53-29" title="29"><span class="co">#&gt; 3 C -0.2029711 FALSE</span></a>
-<a class="sourceLine" id="cb53-30" title="30">df[df<span class="op">$</span>A <span class="op">==</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;A&quot;</span>),] <span class="co"># not the same result why?</span></a>
-<a class="sourceLine" id="cb53-31" title="31"><span class="co">#&gt;   A          B     C</span></a>
-<a class="sourceLine" id="cb53-32" title="32"><span class="co">#&gt; 3 C -0.2029711 FALSE</span></a></code></pre></div>
+<a class="sourceLine" id="cb53-9" title="9"><span class="co">#&gt;   A           B    C</span></a>
+<a class="sourceLine" id="cb53-10" title="10"><span class="co">#&gt; 1 A -0.61143144 TRUE</span></a>
+<a class="sourceLine" id="cb53-11" title="11"><span class="co">#&gt; 3 C -0.50579686 TRUE</span></a>
+<a class="sourceLine" id="cb53-12" title="12"><span class="co">#&gt; 4 D  0.06163945 TRUE</span></a>
+<a class="sourceLine" id="cb53-13" title="13">df[df<span class="op">$</span>B <span class="op">&gt;</span><span class="st"> </span><span class="fl">0.5</span>, ]</a>
+<a class="sourceLine" id="cb53-14" title="14"><span class="co">#&gt;   A         B     C</span></a>
+<a class="sourceLine" id="cb53-15" title="15"><span class="co">#&gt; 6 F 0.5083979 FALSE</span></a>
+<a class="sourceLine" id="cb53-16" title="16">df[df<span class="op">$</span>A <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;C&quot;</span>),] <span class="co"># %in% is used when you want to select/match elements based on an vector of elements see: ?&#39;%in%</span></a>
+<a class="sourceLine" id="cb53-17" title="17"><span class="co">#&gt;   A          B    C</span></a>
+<a class="sourceLine" id="cb53-18" title="18"><span class="co">#&gt; 1 A -0.6114314 TRUE</span></a>
+<a class="sourceLine" id="cb53-19" title="19"><span class="co">#&gt; 3 C -0.5057969 TRUE</span></a>
+<a class="sourceLine" id="cb53-20" title="20">df[df<span class="op">$</span>A <span class="op">==</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;A&quot;</span>, <span class="st">&quot;AC&quot;</span>),] <span class="co"># same result </span></a>
+<a class="sourceLine" id="cb53-21" title="21"><span class="co">#&gt;   A          B    C</span></a>
+<a class="sourceLine" id="cb53-22" title="22"><span class="co">#&gt; 1 A -0.6114314 TRUE</span></a>
+<a class="sourceLine" id="cb53-23" title="23">df[df<span class="op">$</span>A <span class="op">%in%</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;A&quot;</span>),] <span class="co"># same result</span></a>
+<a class="sourceLine" id="cb53-24" title="24"><span class="co">#&gt;   A          B    C</span></a>
+<a class="sourceLine" id="cb53-25" title="25"><span class="co">#&gt; 1 A -0.6114314 TRUE</span></a>
+<a class="sourceLine" id="cb53-26" title="26"><span class="co">#&gt; 3 C -0.5057969 TRUE</span></a>
+<a class="sourceLine" id="cb53-27" title="27">df[df<span class="op">$</span>A <span class="op">==</span><span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;C&quot;</span>, <span class="st">&quot;A&quot;</span>),] <span class="co"># not the same result why?</span></a>
+<a class="sourceLine" id="cb53-28" title="28"><span class="co">#&gt;   A          B    C</span></a>
+<a class="sourceLine" id="cb53-29" title="29"><span class="co">#&gt; 3 C -0.5057969 TRUE</span></a></code></pre></div>
 <p>Also try subsetting <code>df</code> using the logical OR (<code>|</code>) and logical AND (<code>&amp;</code>) as we did above for 1-dimensional atomic vectors.</p>
 <p>At this point remember how subsetting works, it is important to understand this. First we define a condition for which we get a logical vector. Then we feed this into the square brackets to select those items for which the condition was <code>TRUE</code>. Also remember R’s behavior of vector recycling, meaning that it will execute a given operation by position:</p>
 <div class="sourceCode" id="cb54"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb54-1" title="1">df<span class="op">$</span>A <span class="co"># the column we want to select from</span></a>
@@ -1199,12 +1196,12 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb54-8" title="8">logical_b</a>
 <a class="sourceLine" id="cb54-9" title="9"><span class="co">#&gt; [1] FALSE FALSE  TRUE FALSE FALSE FALSE</span></a>
 <a class="sourceLine" id="cb54-10" title="10">df[logical_a, ]</a>
-<a class="sourceLine" id="cb54-11" title="11"><span class="co">#&gt;   A          B     C</span></a>
-<a class="sourceLine" id="cb54-12" title="12"><span class="co">#&gt; 1 A -1.0229424  TRUE</span></a>
-<a class="sourceLine" id="cb54-13" title="13"><span class="co">#&gt; 3 C -0.2029711 FALSE</span></a>
+<a class="sourceLine" id="cb54-11" title="11"><span class="co">#&gt;   A          B    C</span></a>
+<a class="sourceLine" id="cb54-12" title="12"><span class="co">#&gt; 1 A -0.6114314 TRUE</span></a>
+<a class="sourceLine" id="cb54-13" title="13"><span class="co">#&gt; 3 C -0.5057969 TRUE</span></a>
 <a class="sourceLine" id="cb54-14" title="14">df[logical_b, ]</a>
-<a class="sourceLine" id="cb54-15" title="15"><span class="co">#&gt;   A          B     C</span></a>
-<a class="sourceLine" id="cb54-16" title="16"><span class="co">#&gt; 3 C -0.2029711 FALSE</span></a></code></pre></div>
+<a class="sourceLine" id="cb54-15" title="15"><span class="co">#&gt;   A          B    C</span></a>
+<a class="sourceLine" id="cb54-16" title="16"><span class="co">#&gt; 3 C -0.5057969 TRUE</span></a></code></pre></div>
 <p>So whenever you want to match a set of items within a vector use the <code>%in%</code> operator and not <code>==</code>! Otherwise you will very likely introduce errors without knowing!</p>
 </div>
 </div>
@@ -1217,17 +1214,11 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb56-2" title="2"><span class="co">#&gt; Loading required package: fortunes</span></a>
 <a class="sourceLine" id="cb56-3" title="3"><span class="kw">fortune</span>()</a>
 <a class="sourceLine" id="cb56-4" title="4"><span class="co">#&gt; </span></a>
-<a class="sourceLine" id="cb56-5" title="5"><span class="co">#&gt; Trevor Hastie: It would be great to have a &#39;clickable&#39; digest, where the</span></a>
-<a class="sourceLine" id="cb56-6" title="6"><span class="co">#&gt; topics list is a set of pointers, and clicking on a topic takes you to</span></a>
-<a class="sourceLine" id="cb56-7" title="7"><span class="co">#&gt; that entry.</span></a>
-<a class="sourceLine" id="cb56-8" title="8"><span class="co">#&gt; Jeff Gentry: I sincerely hope you don&#39;t mean that you wish HTML enabled</span></a>
-<a class="sourceLine" id="cb56-9" title="9"><span class="co">#&gt; content in the actual emails coming through the mailing list. People who</span></a>
-<a class="sourceLine" id="cb56-10" title="10"><span class="co">#&gt; send HTML in email text should be taken out back and shot :)</span></a>
-<a class="sourceLine" id="cb56-11" title="11"><span class="co">#&gt; Peter Dalgaard: Pretty much what my spam filter does... Well, it kills the</span></a>
-<a class="sourceLine" id="cb56-12" title="12"><span class="co">#&gt; message, not the sender, although the latter would be a more permanent</span></a>
-<a class="sourceLine" id="cb56-13" title="13"><span class="co">#&gt; solution.</span></a>
-<a class="sourceLine" id="cb56-14" title="14"><span class="co">#&gt;    -- Trevor Hastie, Jeff Gentry, and Peter Dalgaard</span></a>
-<a class="sourceLine" id="cb56-15" title="15"><span class="co">#&gt;       R-help (August 2005)</span></a></code></pre></div>
+<a class="sourceLine" id="cb56-5" title="5"><span class="co">#&gt; As for the question of the bug in `is&#39;, ... it depends what your</span></a>
+<a class="sourceLine" id="cb56-6" title="6"><span class="co">#&gt; definition of `is&#39; is.</span></a>
+<a class="sourceLine" id="cb56-7" title="7"><span class="co">#&gt;    -- Douglas Bates (referring to Bill Clinton after a tortuous discussion</span></a>
+<a class="sourceLine" id="cb56-8" title="8"><span class="co">#&gt;       of the behavior of is(7, &quot;integer&quot;))</span></a>
+<a class="sourceLine" id="cb56-9" title="9"><span class="co">#&gt;       R-help (September 2008)</span></a></code></pre></div>
 </div>
 <div id="installing-r-studio" class="section level1">
 <h1><span class="header-section-number">8</span> Installing R Studio</h1>
@@ -1340,26 +1331,26 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb66-4" title="4"></a>
 <a class="sourceLine" id="cb66-5" title="5"><span class="co"># instead if flipping one coin we can also flip many coins simulatnously </span></a>
 <a class="sourceLine" id="cb66-6" title="6"><span class="kw">rbinom</span>(<span class="dv">10</span>, <span class="dv">1</span>, <span class="fl">0.5</span>) <span class="co"># keep repeating this step and observe</span></a>
-<a class="sourceLine" id="cb66-7" title="7"><span class="co">#&gt;  [1] 0 1 0 1 1 0 1 1 1 0</span></a>
+<a class="sourceLine" id="cb66-7" title="7"><span class="co">#&gt;  [1] 0 0 0 0 0 0 1 1 0 1</span></a>
 <a class="sourceLine" id="cb66-8" title="8"></a>
 <a class="sourceLine" id="cb66-9" title="9"><span class="co"># now let&#39;s try one coin tossed repeatedly 10 times</span></a>
 <a class="sourceLine" id="cb66-10" title="10"><span class="kw">rbinom</span>(<span class="dv">1</span>, <span class="dv">10</span>, <span class="fl">0.5</span>) <span class="co"># keep repeating this step and observe</span></a>
-<a class="sourceLine" id="cb66-11" title="11"><span class="co">#&gt; [1] 6</span></a></code></pre></div>
+<a class="sourceLine" id="cb66-11" title="11"><span class="co">#&gt; [1] 5</span></a></code></pre></div>
 <p>Can you figure out what’s happening the last command above? R simply adds the number of 1s (which we will call heads) over the 10 coin flips. So what do you think is the probability of seeing on average 5 heads in 10 coin flips? Well, let’s find out through simulation by increasing the number of coins to 100,000:</p>
 <div class="sourceCode" id="cb67"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb67-1" title="1">flips &lt;-<span class="st"> </span><span class="kw">rbinom</span>(<span class="dv">100000</span>, <span class="dv">10</span>, <span class="fl">0.5</span>)</a>
 <a class="sourceLine" id="cb67-2" title="2"><span class="co"># number of heads over 10 trials for first 20 of the 100,000 coins</span></a>
 <a class="sourceLine" id="cb67-3" title="3">flips[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>]</a>
-<a class="sourceLine" id="cb67-4" title="4"><span class="co">#&gt;  [1] 6 4 7 4 5 2 5 7 5 6 4 4 5 7 8 6 5 1 3 4</span></a>
+<a class="sourceLine" id="cb67-4" title="4"><span class="co">#&gt;  [1] 5 6 2 5 3 4 7 3 4 6 2 6 4 5 2 4 6 5 5 4</span></a>
 <a class="sourceLine" id="cb67-5" title="5"><span class="kw">length</span>(flips)</a>
 <a class="sourceLine" id="cb67-6" title="6"><span class="co">#&gt; [1] 100000</span></a></code></pre></div>
 <p>Remember the relational operators <code>==</code>, <code>&lt;</code>, <code>&gt;</code>, etc. from above? Now we could ask R which of the 100,000 coin flips resulted in 5 heads:</p>
 <div class="sourceCode" id="cb68"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb68-1" title="1">flips_<span class="dv">5</span> &lt;-<span class="st"> </span>flips <span class="op">==</span><span class="st"> </span><span class="dv">5</span></a>
 <a class="sourceLine" id="cb68-2" title="2">flips_<span class="dv">5</span>[<span class="dv">1</span><span class="op">:</span><span class="dv">20</span>]</a>
-<a class="sourceLine" id="cb68-3" title="3"><span class="co">#&gt;  [1] FALSE FALSE FALSE FALSE  TRUE FALSE  TRUE FALSE  TRUE FALSE FALSE</span></a>
-<a class="sourceLine" id="cb68-4" title="4"><span class="co">#&gt; [12] FALSE  TRUE FALSE FALSE FALSE  TRUE FALSE FALSE FALSE</span></a></code></pre></div>
+<a class="sourceLine" id="cb68-3" title="3"><span class="co">#&gt;  [1]  TRUE FALSE FALSE  TRUE FALSE FALSE FALSE FALSE FALSE FALSE FALSE</span></a>
+<a class="sourceLine" id="cb68-4" title="4"><span class="co">#&gt; [12] FALSE FALSE  TRUE FALSE FALSE FALSE  TRUE  TRUE FALSE</span></a></code></pre></div>
 <p>Now also remember from above that R treats <code>TRUE</code> as 1 and <code>FALSE</code> as 0. So would should be able to take the mean of <code>flips_5</code> to get the fraction of TRUEs (or 1s) over the total length of 100,000:</p>
 <div class="sourceCode" id="cb69"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb69-1" title="1"><span class="kw">mean</span>(flips_<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb69-2" title="2"><span class="co">#&gt; [1] 0.24832</span></a></code></pre></div>
+<a class="sourceLine" id="cb69-2" title="2"><span class="co">#&gt; [1] 0.24743</span></a></code></pre></div>
 <p>In a histogram our simulation (<code>flips</code>) would look like this:</p>
 <div class="sourceCode" id="cb70"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb70-1" title="1">flips_df &lt;-<span class="st"> </span><span class="kw">as.data.frame</span>(flips)</a>
 <a class="sourceLine" id="cb70-2" title="2"><span class="kw">ggplot</span>(flips_df, <span class="kw">aes</span>(flips)) <span class="op">+</span><span class="st"> </span><span class="kw">geom_histogram</span>(<span class="dt">bins =</span> <span class="dv">11</span>, <span class="dt">binwidth =</span> <span class="fl">.5</span>) <span class="op">+</span><span class="st"> </span><span class="kw">scale_x_continuous</span>(<span class="dt">breaks =</span> <span class="dv">0</span><span class="op">:</span><span class="dv">10</span>)</a></code></pre></div>
@@ -1372,7 +1363,7 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb71-5" title="5"><span class="kw">choose</span>(n, k) <span class="op">*</span><span class="st"> </span>p<span class="op">^</span>k <span class="op">*</span><span class="st"> </span>(<span class="dv">1</span> <span class="op">-</span><span class="st"> </span>p)<span class="op">^</span>(n <span class="op">-</span><span class="st"> </span>k)</a>
 <a class="sourceLine" id="cb71-6" title="6"><span class="co">#&gt; [1] 0.2460938</span></a>
 <a class="sourceLine" id="cb71-7" title="7"><span class="kw">mean</span>(flips_<span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb71-8" title="8"><span class="co">#&gt; [1] 0.24832</span></a></code></pre></div>
+<a class="sourceLine" id="cb71-8" title="8"><span class="co">#&gt; [1] 0.24743</span></a></code></pre></div>
 <p>In R we can also use the <code>dbinom()</code> function (see: ?<code>dbinom</code>) to calculate the exact probability of success for a given number of trials:</p>
 <div class="sourceCode" id="cb72"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb72-1" title="1"><span class="kw">dbinom</span>(<span class="dv">5</span>, <span class="dv">10</span>, <span class="fl">0.5</span>)</a>
 <a class="sourceLine" id="cb72-2" title="2"><span class="co">#&gt; [1] 0.2460938</span></a></code></pre></div>
@@ -1381,7 +1372,7 @@ Structure of lists (from: <a href="https://r4ds.had.co.nz/vectors.html#lists">R 
 <a class="sourceLine" id="cb73-2" title="2"><span class="co">#&gt; [1] 0.6230469</span></a>
 <a class="sourceLine" id="cb73-3" title="3"></a>
 <a class="sourceLine" id="cb73-4" title="4"><span class="kw">mean</span>(flips <span class="op">&lt;=</span><span class="st"> </span><span class="dv">5</span>)</a>
-<a class="sourceLine" id="cb73-5" title="5"><span class="co">#&gt; [1] 0.62657</span></a></code></pre></div>
+<a class="sourceLine" id="cb73-5" title="5"><span class="co">#&gt; [1] 0.62313</span></a></code></pre></div>
 </div>
 <div id="gaussian" class="section level2">
 <h2><span class="header-section-number">11.2</span> Gaussian</h2>
