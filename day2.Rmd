@@ -103,4 +103,4 @@ ggplot() +
 
 
 ## Using Google maps
-There is a great R package called `ggmap` which allows you to do fantastic maps in R. Please have a look at the [developers source site]() as it has important information. Furthermore have look at [this article](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) in the R Journal about the package `ggmap`. It is a little "dated" (2013) but will still give you an idea what is possible.
+There is a great R package called `ggmap` which allows you to make fantastic maps in R. Please have a look at the [developers source site](https://github.com/dkahle/ggmap) as it has important information. Furthermore have look at [this article](https://journal.r-project.org/archive/2013-1/kahle-wickham.pdf) in the R Journal about the `ggmap` package. It is a little "dated" (2013) but will still give you an idea what is possible.

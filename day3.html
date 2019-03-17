@@ -9,9 +9,10 @@
 <meta name="generator" content="pandoc" />
 
 
+<meta name="author" content="Stefan Schreiber" />
 
 
-<title>Day 3</title>
+<title>R Data manipulation and visualization</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -27,6 +28,97 @@
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
 
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
 
 
 <style type="text/css">
@@ -395,12 +487,232 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Day 3</h1>
+<h1 class="title toc-ignore">R Data manipulation and visualization</h1>
+<h3 class="subtitle">EXGEN5449 - Winter 2019</h3>
+<h4 class="author">Stefan Schreiber</h4>
 
 </div>
 
 
+<script>
+$(document).ready(function() {
+  $items = $('div#TOC li');
+  $items.each(function(idx) {
+    num_ul = $(this).parentsUntil('#TOC').length;
+    $(this).css({'text-indent': num_ul * 10, 'padding-left': 0});
+  });
 
+});
+</script>
+<style type="text/css">
+.red { 
+  color: red;
+  padding-top: 0;
+  margin-top: -20px;
+  border-top-color: #f5f5f5;
+}
+</style>
+<div id="regular-expressions" class="section level1">
+<h1><span class="header-section-number">1</span> Regular expressions</h1>
+<p>As we saw yesterday regular expressions can save you a lot of time, if you put some effort into understanding how they work. They certainly look intimidating at first but you get used to it. For today we keep on working with regular expressions a bit more because I found a great R Studio Addin that helps you understanding them and get a taste for what is possible! The package is currently only available on GitHub. In order to download packages from GitHub you first need to download the <code>devtools</code> package. Once you have downloaded it, you can install packages straight from GitHub. The package we will using is called regexplain and can be found <a href="https://github.com/gadenbuie/regexplain">here</a>. Have a look at the README file. To install the package run:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">devtools<span class="op">::</span><span class="kw">install_github</span>(<span class="st">&quot;gadenbuie/regexplain&quot;</span>)</a></code></pre></div>
+<p>Now you will have <code>REGEXPLAIN</code> in your <code>Addins</code> drop down menu (below the <code>Tools</code> menu). Another great resource for testing your regular expressions is this website: <a href="https://regex101.com/" class="uri">https://regex101.com/</a></p>
+<p>I also wanted to share with you the regex example I showed you yesterday. Instead of sending or downloading CSV files, you could also read out the data frame you are working with using the <code>dput()</code> function. Then you can simply copy/paste the output into an email and send it to your collaborator for example. This also very helpful when you ask a question on those QA sites such as <a href="https://stackoverflow.com/">StackOverflow</a> as they always want a reproducible example but at the same time will not download any files on there own computers. Once you share the <code>dput()</code> output, the recipient can simply copy/paste it into their own R console and recreate your data frame that way. Below I did the same. Simply copy/paste those two blocks of code into your console and you have those data sets ready.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">require</span>(tidyverse)</a>
+<a class="sourceLine" id="cb2-2" title="2"></a>
+<a class="sourceLine" id="cb2-3" title="3">d1 &lt;-<span class="st"> </span><span class="kw">structure</span>(<span class="kw">list</span>(<span class="dt">Treatment =</span> <span class="kw">structure</span>(<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>, <span class="dt">.Label =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, </a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="st">&quot;c&quot;</span>), <span class="dt">class =</span> <span class="st">&quot;factor&quot;</span>), <span class="dt">Height_7days =</span> <span class="kw">c</span>(<span class="fl">0.241756922</span>, <span class="fl">0.017613771</span>, </a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="fl">0.913951358</span>), <span class="dt">Height.14days =</span> <span class="kw">c</span>(<span class="fl">0.557475118</span>, <span class="fl">0.115967094</span>, <span class="fl">0.276483941</span></a>
+<a class="sourceLine" id="cb2-6" title="6">), <span class="dt">Height21days =</span> <span class="kw">c</span>(<span class="fl">0.882937228</span>, <span class="fl">0.664116205</span>, <span class="fl">0.110760574</span>), <span class="dt">Weight_7days =</span> <span class="kw">c</span>(<span class="fl">0.014404525</span>, </a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="fl">0.591611048</span>, <span class="fl">0.365071975</span>), <span class="dt">Weight..14days =</span> <span class="kw">c</span>(<span class="fl">0.365071975</span>, <span class="fl">0.46561814</span>, </a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="fl">0.943144072</span>), <span class="dt">Weight_21days =</span> <span class="kw">c</span>(<span class="fl">0.420476422</span>, <span class="fl">0.86572502</span>, <span class="fl">0.911250316</span></a>
+<a class="sourceLine" id="cb2-9" title="9">)), <span class="dt">class =</span> <span class="st">&quot;data.frame&quot;</span>, <span class="dt">row.names =</span> <span class="kw">c</span>(<span class="ot">NA</span>, <span class="op">-</span>3L))</a>
+<a class="sourceLine" id="cb2-10" title="10"></a>
+<a class="sourceLine" id="cb2-11" title="11">d2 &lt;-<span class="st"> </span><span class="kw">structure</span>(<span class="kw">list</span>(<span class="dt">Treatment =</span> <span class="kw">c</span>(<span class="st">&quot;a&quot;</span>, <span class="st">&quot;b&quot;</span>, <span class="st">&quot;c&quot;</span>), <span class="dt">Height_7days =</span> <span class="kw">c</span>(<span class="fl">0.241756922</span>, </a>
+<a class="sourceLine" id="cb2-12" title="12"><span class="fl">0.017613771</span>, <span class="fl">0.913951358</span>), <span class="st">`</span><span class="dt">Height 14days</span><span class="st">`</span> =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.557475118</span>, <span class="fl">0.115967094</span>, </a>
+<a class="sourceLine" id="cb2-13" title="13"><span class="fl">0.276483941</span>), <span class="dt">Height21days =</span> <span class="kw">c</span>(<span class="fl">0.882937228</span>, <span class="fl">0.664116205</span>, <span class="fl">0.110760574</span></a>
+<a class="sourceLine" id="cb2-14" title="14">), <span class="dt">Weight_7days =</span> <span class="kw">c</span>(<span class="fl">0.014404525</span>, <span class="fl">0.591611048</span>, <span class="fl">0.365071975</span>), <span class="st">`</span><span class="dt">Weight  14days</span><span class="st">`</span> =<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.365071975</span>, </a>
+<a class="sourceLine" id="cb2-15" title="15"><span class="fl">0.46561814</span>, <span class="fl">0.943144072</span>), <span class="dt">Weight_21days =</span> <span class="kw">c</span>(<span class="fl">0.420476422</span>, <span class="fl">0.86572502</span>, </a>
+<a class="sourceLine" id="cb2-16" title="16"><span class="fl">0.911250316</span>)), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;spec_tbl_df&quot;</span>, <span class="st">&quot;tbl_df&quot;</span>, <span class="st">&quot;tbl&quot;</span>, <span class="st">&quot;data.frame&quot;</span></a>
+<a class="sourceLine" id="cb2-17" title="17">), <span class="dt">row.names =</span> <span class="kw">c</span>(<span class="ot">NA</span>, <span class="op">-</span>3L), <span class="dt">spec =</span> <span class="kw">structure</span>(<span class="kw">list</span>(<span class="dt">cols =</span> <span class="kw">list</span>(</a>
+<a class="sourceLine" id="cb2-18" title="18">    <span class="dt">Treatment =</span> <span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_character&quot;</span>, </a>
+<a class="sourceLine" id="cb2-19" title="19">    <span class="st">&quot;collector&quot;</span>)), <span class="dt">Height_7days =</span> <span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_double&quot;</span>, </a>
+<a class="sourceLine" id="cb2-20" title="20">    <span class="st">&quot;collector&quot;</span>)), <span class="st">`</span><span class="dt">Height 14days</span><span class="st">`</span> =<span class="st"> </span><span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_double&quot;</span>, </a>
+<a class="sourceLine" id="cb2-21" title="21">    <span class="st">&quot;collector&quot;</span>)), <span class="dt">Height21days =</span> <span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_double&quot;</span>, </a>
+<a class="sourceLine" id="cb2-22" title="22">    <span class="st">&quot;collector&quot;</span>)), <span class="dt">Weight_7days =</span> <span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_double&quot;</span>, </a>
+<a class="sourceLine" id="cb2-23" title="23">    <span class="st">&quot;collector&quot;</span>)), <span class="st">`</span><span class="dt">Weight  14days</span><span class="st">`</span> =<span class="st"> </span><span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_double&quot;</span>, </a>
+<a class="sourceLine" id="cb2-24" title="24">    <span class="st">&quot;collector&quot;</span>)), <span class="dt">Weight_21days =</span> <span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_double&quot;</span>, </a>
+<a class="sourceLine" id="cb2-25" title="25">    <span class="st">&quot;collector&quot;</span>))), <span class="dt">default =</span> <span class="kw">structure</span>(<span class="kw">list</span>(), <span class="dt">class =</span> <span class="kw">c</span>(<span class="st">&quot;collector_guess&quot;</span>, </a>
+<a class="sourceLine" id="cb2-26" title="26"><span class="st">&quot;collector&quot;</span>)), <span class="dt">skip =</span> <span class="dv">1</span>), <span class="dt">class =</span> <span class="st">&quot;col_spec&quot;</span>))</a>
+<a class="sourceLine" id="cb2-27" title="27"></a>
+<a class="sourceLine" id="cb2-28" title="28">d1</a>
+<a class="sourceLine" id="cb2-29" title="29"><span class="co">#&gt;   Treatment Height_7days Height.14days Height21days Weight_7days</span></a>
+<a class="sourceLine" id="cb2-30" title="30"><span class="co">#&gt; 1         a   0.24175692     0.5574751    0.8829372   0.01440452</span></a>
+<a class="sourceLine" id="cb2-31" title="31"><span class="co">#&gt; 2         b   0.01761377     0.1159671    0.6641162   0.59161105</span></a>
+<a class="sourceLine" id="cb2-32" title="32"><span class="co">#&gt; 3         c   0.91395136     0.2764839    0.1107606   0.36507197</span></a>
+<a class="sourceLine" id="cb2-33" title="33"><span class="co">#&gt;   Weight..14days Weight_21days</span></a>
+<a class="sourceLine" id="cb2-34" title="34"><span class="co">#&gt; 1      0.3650720     0.4204764</span></a>
+<a class="sourceLine" id="cb2-35" title="35"><span class="co">#&gt; 2      0.4656181     0.8657250</span></a>
+<a class="sourceLine" id="cb2-36" title="36"><span class="co">#&gt; 3      0.9431441     0.9112503</span></a>
+<a class="sourceLine" id="cb2-37" title="37"></a>
+<a class="sourceLine" id="cb2-38" title="38">d2</a>
+<a class="sourceLine" id="cb2-39" title="39"><span class="co">#&gt; # A tibble: 3 x 7</span></a>
+<a class="sourceLine" id="cb2-40" title="40"><span class="co">#&gt;   Treatment Height_7days `Height 14days` Height21days Weight_7days</span></a>
+<a class="sourceLine" id="cb2-41" title="41"><span class="co">#&gt;   &lt;chr&gt;            &lt;dbl&gt;           &lt;dbl&gt;        &lt;dbl&gt;        &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb2-42" title="42"><span class="co">#&gt; 1 a               0.242            0.557        0.883       0.0144</span></a>
+<a class="sourceLine" id="cb2-43" title="43"><span class="co">#&gt; 2 b               0.0176           0.116        0.664       0.592 </span></a>
+<a class="sourceLine" id="cb2-44" title="44"><span class="co">#&gt; 3 c               0.914            0.276        0.111       0.365 </span></a>
+<a class="sourceLine" id="cb2-45" title="45"><span class="co">#&gt; # ... with 2 more variables: `Weight 14days` &lt;dbl&gt;, Weight_21days &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb2-46" title="46"></a>
+<a class="sourceLine" id="cb2-47" title="47"><span class="co"># the regex below in the extract() function is universal enough to match both scenarios (read.csv and read_csv)</span></a>
+<a class="sourceLine" id="cb2-48" title="48"><span class="co"># there are also shorthand versions of this regex but I use this one as it is more clear to me</span></a>
+<a class="sourceLine" id="cb2-49" title="49"><span class="co"># this is where I got the idea from: https://stackoverflow.com/questions/25925556/gather-multiple-sets-of-columns</span></a>
+<a class="sourceLine" id="cb2-50" title="50"><span class="co"># see also ?regex </span></a>
+<a class="sourceLine" id="cb2-51" title="51"></a>
+<a class="sourceLine" id="cb2-52" title="52"><span class="co"># run each line individually to see what the function are doing</span></a>
+<a class="sourceLine" id="cb2-53" title="53">d1 <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;key&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;value&quot;</span>, <span class="op">-</span><span class="st"> </span>Treatment) <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb2-54" title="54"><span class="st">  </span><span class="kw">extract</span>(key, <span class="kw">c</span>(<span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;Days&quot;</span>), <span class="st">&quot;([[:alpha:]]+)[[:space:][:punct:]]*([[:digit:]]+)&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-55" title="55"><span class="st">  </span><span class="kw">spread</span>(parameter, value)</a>
+<a class="sourceLine" id="cb2-56" title="56"><span class="co">#&gt;   Treatment Days     Height     Weight</span></a>
+<a class="sourceLine" id="cb2-57" title="57"><span class="co">#&gt; 1         a   14 0.55747512 0.36507197</span></a>
+<a class="sourceLine" id="cb2-58" title="58"><span class="co">#&gt; 2         a   21 0.88293723 0.42047642</span></a>
+<a class="sourceLine" id="cb2-59" title="59"><span class="co">#&gt; 3         a    7 0.24175692 0.01440452</span></a>
+<a class="sourceLine" id="cb2-60" title="60"><span class="co">#&gt; 4         b   14 0.11596709 0.46561814</span></a>
+<a class="sourceLine" id="cb2-61" title="61"><span class="co">#&gt; 5         b   21 0.66411621 0.86572502</span></a>
+<a class="sourceLine" id="cb2-62" title="62"><span class="co">#&gt; 6         b    7 0.01761377 0.59161105</span></a>
+<a class="sourceLine" id="cb2-63" title="63"><span class="co">#&gt; 7         c   14 0.27648394 0.94314407</span></a>
+<a class="sourceLine" id="cb2-64" title="64"><span class="co">#&gt; 8         c   21 0.11076057 0.91125032</span></a>
+<a class="sourceLine" id="cb2-65" title="65"><span class="co">#&gt; 9         c    7 0.91395136 0.36507197</span></a>
+<a class="sourceLine" id="cb2-66" title="66"></a>
+<a class="sourceLine" id="cb2-67" title="67">d2 <span class="op">%&gt;%</span><span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;key&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;value&quot;</span>, <span class="op">-</span><span class="st"> </span>Treatment) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-68" title="68"><span class="st">  </span><span class="kw">extract</span>(key, <span class="kw">c</span>(<span class="st">&quot;parameter&quot;</span>, <span class="st">&quot;Days&quot;</span>), <span class="st">&quot;([[:alpha:]]+)[[:space:][:punct:]]*([[:digit:]]+)&quot;</span>) <span class="op">%&gt;%</span></a>
+<a class="sourceLine" id="cb2-69" title="69"><span class="st">  </span><span class="kw">spread</span>(parameter, value)</a>
+<a class="sourceLine" id="cb2-70" title="70"><span class="co">#&gt; # A tibble: 9 x 4</span></a>
+<a class="sourceLine" id="cb2-71" title="71"><span class="co">#&gt;   Treatment Days  Height Weight</span></a>
+<a class="sourceLine" id="cb2-72" title="72"><span class="co">#&gt;   &lt;chr&gt;     &lt;chr&gt;  &lt;dbl&gt;  &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb2-73" title="73"><span class="co">#&gt; 1 a         14    0.557  0.365 </span></a>
+<a class="sourceLine" id="cb2-74" title="74"><span class="co">#&gt; 2 a         21    0.883  0.420 </span></a>
+<a class="sourceLine" id="cb2-75" title="75"><span class="co">#&gt; 3 a         7     0.242  0.0144</span></a>
+<a class="sourceLine" id="cb2-76" title="76"><span class="co">#&gt; 4 b         14    0.116  0.466 </span></a>
+<a class="sourceLine" id="cb2-77" title="77"><span class="co">#&gt; 5 b         21    0.664  0.866 </span></a>
+<a class="sourceLine" id="cb2-78" title="78"><span class="co">#&gt; 6 b         7     0.0176 0.592 </span></a>
+<a class="sourceLine" id="cb2-79" title="79"><span class="co">#&gt; 7 c         14    0.276  0.943 </span></a>
+<a class="sourceLine" id="cb2-80" title="80"><span class="co">#&gt; 8 c         21    0.111  0.911 </span></a>
+<a class="sourceLine" id="cb2-81" title="81"><span class="co">#&gt; 9 c         7     0.914  0.365</span></a></code></pre></div>
+<p>Alright for today, I want to share another great data set with you. You can find it in the <code>gapminder</code> package:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">require</span>(gapminder)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#&gt; Loading required package: gapminder</span></a></code></pre></div>
+<p>To change things up a bit let’s watch a quick movie about this data set: <a href="https://www.youtube.com/watch?v=jbkSRLYSojo" class="uri">https://www.youtube.com/watch?v=jbkSRLYSojo</a></p>
+<p>The gapminder data set is a subset of the data presented in the video. Now, it’s your turn again! Take the data set and turn it upside down.</p>
+</div>
+<div id="analysis-of-variance" class="section level1">
+<h1><span class="header-section-number">2</span> Analysis of variance</h1>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">m1 &lt;-<span class="st"> </span><span class="kw">aov</span>(lifeExp <span class="op">~</span><span class="st"> </span>continent, <span class="dt">data =</span> gapminder)</a>
+<a class="sourceLine" id="cb4-2" title="2"><span class="kw">summary</span>(m1) <span class="co"># Significant continent effect</span></a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt;               Df Sum Sq Mean Sq F value Pr(&gt;F)    </span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt; continent      4 139343   34836   408.7 &lt;2e-16 ***</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; Residuals   1699 144805      85                   </span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb4-8" title="8"></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co"># emmeans package great for doing posthoc comparisons</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="kw">require</span>(emmeans)</a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt; Loading required package: emmeans</span></a>
+<a class="sourceLine" id="cb4-12" title="12"></a>
+<a class="sourceLine" id="cb4-13" title="13">(mean_comparisons &lt;-<span class="st"> </span><span class="kw">emmeans</span>(m1, <span class="st">&quot;continent&quot;</span>))</a>
+<a class="sourceLine" id="cb4-14" title="14"><span class="co">#&gt;  continent emmean    SE   df lower.CL upper.CL</span></a>
+<a class="sourceLine" id="cb4-15" title="15"><span class="co">#&gt;  Africa      48.9 0.370 1699     48.1     49.6</span></a>
+<a class="sourceLine" id="cb4-16" title="16"><span class="co">#&gt;  Americas    64.7 0.533 1699     63.6     65.7</span></a>
+<a class="sourceLine" id="cb4-17" title="17"><span class="co">#&gt;  Asia        60.1 0.464 1699     59.2     61.0</span></a>
+<a class="sourceLine" id="cb4-18" title="18"><span class="co">#&gt;  Europe      71.9 0.487 1699     70.9     72.9</span></a>
+<a class="sourceLine" id="cb4-19" title="19"><span class="co">#&gt;  Oceania     74.3 1.884 1699     70.6     78.0</span></a>
+<a class="sourceLine" id="cb4-20" title="20"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-21" title="21"><span class="co">#&gt; Confidence level used: 0.95</span></a>
+<a class="sourceLine" id="cb4-22" title="22">(tukey_comparisons &lt;-<span class="st"> </span><span class="kw">CLD</span>(mean_comparisons, <span class="dt">Letters =</span> letters))</a>
+<a class="sourceLine" id="cb4-23" title="23"><span class="co">#&gt;  continent emmean    SE   df lower.CL upper.CL .group</span></a>
+<a class="sourceLine" id="cb4-24" title="24"><span class="co">#&gt;  Africa      48.9 0.370 1699     48.1     49.6  a    </span></a>
+<a class="sourceLine" id="cb4-25" title="25"><span class="co">#&gt;  Asia        60.1 0.464 1699     59.2     61.0   b   </span></a>
+<a class="sourceLine" id="cb4-26" title="26"><span class="co">#&gt;  Americas    64.7 0.533 1699     63.6     65.7    c  </span></a>
+<a class="sourceLine" id="cb4-27" title="27"><span class="co">#&gt;  Europe      71.9 0.487 1699     70.9     72.9     d </span></a>
+<a class="sourceLine" id="cb4-28" title="28"><span class="co">#&gt;  Oceania     74.3 1.884 1699     70.6     78.0     d </span></a>
+<a class="sourceLine" id="cb4-29" title="29"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb4-30" title="30"><span class="co">#&gt; Confidence level used: 0.95 </span></a>
+<a class="sourceLine" id="cb4-31" title="31"><span class="co">#&gt; P value adjustment: tukey method for comparing a family of 5 estimates </span></a>
+<a class="sourceLine" id="cb4-32" title="32"><span class="co">#&gt; significance level used: alpha = 0.05</span></a>
+<a class="sourceLine" id="cb4-33" title="33">tukey_comparisons<span class="op">$</span>.group2 &lt;-<span class="st"> </span><span class="kw">trimws</span>(tukey_comparisons<span class="op">$</span>.group)</a>
+<a class="sourceLine" id="cb4-34" title="34"></a>
+<a class="sourceLine" id="cb4-35" title="35"><span class="kw">ggplot</span>(tukey_comparisons, <span class="kw">aes</span>(<span class="dt">x =</span> continent, <span class="dt">y =</span> emmean)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-36" title="36"><span class="st">  </span><span class="kw">geom_pointrange</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> lower.CL, <span class="dt">ymax =</span> upper.CL)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb4-37" title="37"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> continent, <span class="dt">y =</span> upper.CL <span class="op">+</span><span class="st"> </span><span class="dv">2</span>, <span class="dt">label =</span> .group2)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb4-38" title="38"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Continent&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Mean Life Expectancy&quot;</span>)</a></code></pre></div>
+<p><img src="day3_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"></a>
+<a class="sourceLine" id="cb5-2" title="2"><span class="kw">ggplot</span>(tukey_comparisons, <span class="kw">aes</span>(<span class="dt">x =</span> continent, <span class="dt">y =</span> emmean)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="st">  </span><span class="kw">geom_col</span>(<span class="dt">fill =</span> <span class="st">&quot;grey60&quot;</span>) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="st">  </span><span class="kw">geom_errorbar</span>(<span class="kw">aes</span>(<span class="dt">ymin =</span> lower.CL, <span class="dt">ymax =</span> upper.CL), <span class="dt">width =</span> <span class="fl">0.25</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="st">  </span><span class="kw">geom_text</span>(<span class="kw">aes</span>(<span class="dt">x =</span> continent, <span class="dt">y =</span> upper.CL <span class="op">+</span><span class="st"> </span><span class="dv">3</span>, <span class="dt">label =</span> .group2)) <span class="op">+</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;Continent&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Mean Life Expectancy&quot;</span>)</a></code></pre></div>
+<p><img src="day3_files/figure-html/unnamed-chunk-5-2.png" width="672" /></p>
+</div>
+<div id="linear-regression" class="section level1">
+<h1><span class="header-section-number">3</span> Linear regression</h1>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">gapminder <span class="op">%&gt;%</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-2" title="2"><span class="st">  </span><span class="kw">filter</span>(continent <span class="op">==</span><span class="st"> &quot;Europe&quot;</span>) -&gt;<span class="st"> </span>europe </a>
+<a class="sourceLine" id="cb6-3" title="3">  </a>
+<a class="sourceLine" id="cb6-4" title="4">m2 &lt;-<span class="st"> </span><span class="kw">lm</span>(lifeExp <span class="op">~</span><span class="st"> </span>gdpPercap, europe)</a>
+<a class="sourceLine" id="cb6-5" title="5">m2 <span class="co"># lifeExp = 65.34 + 4.535*10^-4 * gdpPercap</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; Call:</span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">#&gt; lm(formula = lifeExp ~ gdpPercap, data = europe)</span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="co">#&gt; Coefficients:</span></a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt; (Intercept)    gdpPercap  </span></a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="co">#&gt;   6.534e+01    4.535e-04</span></a>
+<a class="sourceLine" id="cb6-13" title="13"></a>
+<a class="sourceLine" id="cb6-14" title="14"></a>
+<a class="sourceLine" id="cb6-15" title="15"><span class="kw">summary</span>(m2)</a>
+<a class="sourceLine" id="cb6-16" title="16"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-17" title="17"><span class="co">#&gt; Call:</span></a>
+<a class="sourceLine" id="cb6-18" title="18"><span class="co">#&gt; lm(formula = lifeExp ~ gdpPercap, data = europe)</span></a>
+<a class="sourceLine" id="cb6-19" title="19"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-20" title="20"><span class="co">#&gt; Residuals:</span></a>
+<a class="sourceLine" id="cb6-21" title="21"><span class="co">#&gt;      Min       1Q   Median       3Q      Max </span></a>
+<a class="sourceLine" id="cb6-22" title="22"><span class="co">#&gt; -22.6504  -1.2783   0.1333   2.0302   8.3884 </span></a>
+<a class="sourceLine" id="cb6-23" title="23"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-24" title="24"><span class="co">#&gt; Coefficients:</span></a>
+<a class="sourceLine" id="cb6-25" title="25"><span class="co">#&gt;              Estimate Std. Error t value Pr(&gt;|t|)    </span></a>
+<a class="sourceLine" id="cb6-26" title="26"><span class="co">#&gt; (Intercept) 6.534e+01  3.303e-01  197.82   &lt;2e-16 ***</span></a>
+<a class="sourceLine" id="cb6-27" title="27"><span class="co">#&gt; gdpPercap   4.534e-04  1.918e-05   23.64   &lt;2e-16 ***</span></a>
+<a class="sourceLine" id="cb6-28" title="28"><span class="co">#&gt; ---</span></a>
+<a class="sourceLine" id="cb6-29" title="29"><span class="co">#&gt; Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1</span></a>
+<a class="sourceLine" id="cb6-30" title="30"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb6-31" title="31"><span class="co">#&gt; Residual standard error: 3.399 on 358 degrees of freedom</span></a>
+<a class="sourceLine" id="cb6-32" title="32"><span class="co">#&gt; Multiple R-squared:  0.6096, Adjusted R-squared:  0.6085 </span></a>
+<a class="sourceLine" id="cb6-33" title="33"><span class="co">#&gt; F-statistic: 559.1 on 1 and 358 DF,  p-value: &lt; 2.2e-16</span></a>
+<a class="sourceLine" id="cb6-34" title="34"></a>
+<a class="sourceLine" id="cb6-35" title="35">new_data &lt;-<span class="st"> </span><span class="kw">tibble</span>(<span class="dt">gdpPercap =</span> <span class="kw">c</span>(<span class="dv">20000</span>, <span class="dv">30000</span>, <span class="dv">40000</span>, <span class="dv">50000</span>))</a>
+<a class="sourceLine" id="cb6-36" title="36">new_data</a>
+<a class="sourceLine" id="cb6-37" title="37"><span class="co">#&gt; # A tibble: 4 x 1</span></a>
+<a class="sourceLine" id="cb6-38" title="38"><span class="co">#&gt;   gdpPercap</span></a>
+<a class="sourceLine" id="cb6-39" title="39"><span class="co">#&gt;       &lt;dbl&gt;</span></a>
+<a class="sourceLine" id="cb6-40" title="40"><span class="co">#&gt; 1     20000</span></a>
+<a class="sourceLine" id="cb6-41" title="41"><span class="co">#&gt; 2     30000</span></a>
+<a class="sourceLine" id="cb6-42" title="42"><span class="co">#&gt; 3     40000</span></a>
+<a class="sourceLine" id="cb6-43" title="43"><span class="co">#&gt; 4     50000</span></a>
+<a class="sourceLine" id="cb6-44" title="44"></a>
+<a class="sourceLine" id="cb6-45" title="45"><span class="kw">predict</span>(m2, new_data, <span class="dt">interval =</span> <span class="st">&quot;prediction&quot;</span>)</a>
+<a class="sourceLine" id="cb6-46" title="46"><span class="co">#&gt;        fit      lwr      upr</span></a>
+<a class="sourceLine" id="cb6-47" title="47"><span class="co">#&gt; 1 74.41151 67.71368 81.10934</span></a>
+<a class="sourceLine" id="cb6-48" title="48"><span class="co">#&gt; 2 78.94602 72.22587 85.66618</span></a>
+<a class="sourceLine" id="cb6-49" title="49"><span class="co">#&gt; 3 83.48053 76.71706 90.24401</span></a>
+<a class="sourceLine" id="cb6-50" title="50"><span class="co">#&gt; 4 88.01505 81.18767 94.84243</span></a>
+<a class="sourceLine" id="cb6-51" title="51"></a>
+<a class="sourceLine" id="cb6-52" title="52"><span class="kw">ggplot</span>(europe, <span class="kw">aes</span>(gdpPercap, lifeExp)) <span class="op">+</span><span class="st"> </span></a>
+<a class="sourceLine" id="cb6-53" title="53"><span class="st">  </span><span class="kw">geom_point</span>() <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-54" title="54"><span class="st">  </span><span class="kw">geom_smooth</span>(<span class="dt">method =</span> <span class="st">&quot;lm&quot;</span>) <span class="op">+</span></a>
+<a class="sourceLine" id="cb6-55" title="55"><span class="st">  </span><span class="kw">labs</span>(<span class="dt">x =</span> <span class="st">&quot;GDP per capita&quot;</span>, <span class="dt">y =</span> <span class="st">&quot;Life Expectancy&quot;</span>)</a></code></pre></div>
+<p><img src="day3_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
 
 
 

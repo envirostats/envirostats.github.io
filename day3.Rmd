@@ -1,16 +1,159 @@
 ---
-title: "Day 3"
+title: "R Data manipulation and visualization"
+subtitle: "EXGEN5449 - Winter 2019"
+author: "Stefan Schreiber"
 output:
   html_document:
     theme: paper
     highlight: pygments
     toc: true
+    number_sections: true
+    toc_depth: 3
     toc_float:
       collapsed: true
       smooth_scroll: true
 ---
 
+<script>
+$(document).ready(function() {
+  $items = $('div#TOC li');
+  $items.each(function(idx) {
+    num_ul = $(this).parentsUntil('#TOC').length;
+    $(this).css({'text-indent': num_ul * 10, 'padding-left': 0});
+  });
+
+});
+</script>
+
+```{css echo=FALSE}
+.red { 
+  color: red;
+  padding-top: 0;
+  margin-top: -20px;
+  border-top-color: #f5f5f5;
+}
+```
+
+
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, collapse = TRUE, comment = "#>")
+```
+
+# Regular expressions
+As we saw yesterday regular expressions can save you a lot of time, if you put some effort into understanding how they work. They certainly look intimidating at first but you get used to it. For today we keep on working with regular expressions a bit more because I found a great R Studio Addin that helps you understanding them and get a taste for what is possible! The package is currently only available on GitHub. In order to download packages from GitHub you first need to download the `devtools` package. Once you have downloaded it, you can install packages straight from GitHub. The package we will using is called regexplain and can be found [here](https://github.com/gadenbuie/regexplain). Have a look at the README file. To install the package run:
+```{r eval=FALSE}
+devtools::install_github("gadenbuie/regexplain")
+```
+
+Now you will have `REGEXPLAIN` in your `Addins` drop down menu (below the `Tools` menu). Another great resource for testing your regular expressions is this website: https://regex101.com/
+
+I also wanted to share with you the regex example I showed you yesterday. Instead of sending or downloading CSV files, you could also read out the data frame you are working with using the `dput()` function. Then you can simply copy/paste the output into an email and send it to your collaborator for example. This also very helpful when you ask a question on those QA sites such as [StackOverflow](https://stackoverflow.com/) as they always want a reproducible example but at the same time will not download any files on there own computers. Once you share the `dput()` output, the recipient can simply copy/paste it into their own R console and recreate your data frame that way. Below I did the same. Simply copy/paste those two blocks of code into your console and you have those data sets ready.    
+
+```{r message = FALSE}
+require(tidyverse)
+
+d1 <- structure(list(Treatment = structure(1:3, .Label = c("a", "b", 
+"c"), class = "factor"), Height_7days = c(0.241756922, 0.017613771, 
+0.913951358), Height.14days = c(0.557475118, 0.115967094, 0.276483941
+), Height21days = c(0.882937228, 0.664116205, 0.110760574), Weight_7days = c(0.014404525, 
+0.591611048, 0.365071975), Weight..14days = c(0.365071975, 0.46561814, 
+0.943144072), Weight_21days = c(0.420476422, 0.86572502, 0.911250316
+)), class = "data.frame", row.names = c(NA, -3L))
+
+d2 <- structure(list(Treatment = c("a", "b", "c"), Height_7days = c(0.241756922, 
+0.017613771, 0.913951358), `Height 14days` = c(0.557475118, 0.115967094, 
+0.276483941), Height21days = c(0.882937228, 0.664116205, 0.110760574
+), Weight_7days = c(0.014404525, 0.591611048, 0.365071975), `Weight  14days` = c(0.365071975, 
+0.46561814, 0.943144072), Weight_21days = c(0.420476422, 0.86572502, 
+0.911250316)), class = c("spec_tbl_df", "tbl_df", "tbl", "data.frame"
+), row.names = c(NA, -3L), spec = structure(list(cols = list(
+    Treatment = structure(list(), class = c("collector_character", 
+    "collector")), Height_7days = structure(list(), class = c("collector_double", 
+    "collector")), `Height 14days` = structure(list(), class = c("collector_double", 
+    "collector")), Height21days = structure(list(), class = c("collector_double", 
+    "collector")), Weight_7days = structure(list(), class = c("collector_double", 
+    "collector")), `Weight  14days` = structure(list(), class = c("collector_double", 
+    "collector")), Weight_21days = structure(list(), class = c("collector_double", 
+    "collector"))), default = structure(list(), class = c("collector_guess", 
+"collector")), skip = 1), class = "col_spec"))
+
+d1
+
+d2
+
+# the regex below in the extract() function is universal enough to match both scenarios (read.csv and read_csv)
+# there are also shorthand versions of this regex but I use this one as it is more clear to me
+# this is where I got the idea from: https://stackoverflow.com/questions/25925556/gather-multiple-sets-of-columns
+# see also ?regex 
+
+# run each line individually to see what the function are doing
+d1 %>%  gather(key = "key", value = "value", - Treatment) %>% 
+  extract(key, c("parameter", "Days"), "([[:alpha:]]+)[[:space:][:punct:]]*([[:digit:]]+)") %>%
+  spread(parameter, value)
+
+d2 %>%  gather(key = "key", value = "value", - Treatment) %>%
+  extract(key, c("parameter", "Days"), "([[:alpha:]]+)[[:space:][:punct:]]*([[:digit:]]+)") %>%
+  spread(parameter, value)
+
+```
+
+Alright for today, I want to share another great data set with you. You can find it in the `gapminder` package:
+
+```{r }
+require(gapminder)
+```
+
+To change things up a bit let's watch a quick movie about this data set: https://www.youtube.com/watch?v=jbkSRLYSojo
+
+The gapminder data set is a subset of the data presented in the video. Now, it's your turn again! Take the data set and turn it upside down. 
+
+
+# Analysis of variance
+```{r}
+m1 <- aov(lifeExp ~ continent, data = gapminder)
+summary(m1) # Significant continent effect
+
+# emmeans package great for doing posthoc comparisons
+require(emmeans)
+
+(mean_comparisons <- emmeans(m1, "continent"))
+(tukey_comparisons <- CLD(mean_comparisons, Letters = letters))
+tukey_comparisons$.group2 <- trimws(tukey_comparisons$.group)
+
+ggplot(tukey_comparisons, aes(x = continent, y = emmean)) + 
+  geom_pointrange(aes(ymin = lower.CL, ymax = upper.CL)) + 
+  geom_text(aes(x = continent, y = upper.CL + 2, label = .group2)) +
+  labs(x = "Continent", y = "Mean Life Expectancy")
+
+ggplot(tukey_comparisons, aes(x = continent, y = emmean)) + 
+  geom_col(fill = "grey60") + 
+  geom_errorbar(aes(ymin = lower.CL, ymax = upper.CL), width = 0.25) +
+  geom_text(aes(x = continent, y = upper.CL + 3, label = .group2)) +
+  labs(x = "Continent", y = "Mean Life Expectancy")
+
+```
+
+
+# Linear regression
+```{r}
+gapminder %>% 
+  filter(continent == "Europe") -> europe 
+  
+m2 <- lm(lifeExp ~ gdpPercap, europe)
+m2 # lifeExp = 65.34 + 4.535*10^-4 * gdpPercap
+
+
+summary(m2)
+
+new_data <- tibble(gdpPercap = c(20000, 30000, 40000, 50000))
+new_data
+
+predict(m2, new_data, interval = "prediction")
+
+ggplot(europe, aes(gdpPercap, lifeExp)) + 
+  geom_point() +
+  geom_smooth(method = "lm") +
+  labs(x = "GDP per capita", y = "Life Expectancy")
+
 ```
 
