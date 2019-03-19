@@ -1,5 +1,5 @@
 ---
-title: "R Data manipulation and visualization"
+title: "Regular expressions and simple models"
 subtitle: "EXGEN5449 - Winter 2019"
 author: "Stefan Schreiber"
 output:
@@ -45,7 +45,7 @@ As we saw yesterday regular expressions can save you a lot of time, if you put s
 devtools::install_github("gadenbuie/regexplain")
 ```
 
-Now you will have `REGEXPLAIN` in your `Addins` drop down menu (below the `Tools` menu). Another great resource for testing your regular expressions is this website: https://regex101.com/
+Now you will have `REGEXPLAIN` in your `Addins` drop down menu (below the `Tools` menu). Another great resource for testing your regular expressions are these two website: https://regex101.com/ and https://www.regular-expressions.info/ 
 
 I also wanted to share with you the regex example I showed you yesterday. Instead of sending or downloading CSV files, you could also read out the data frame you are working with using the `dput()` function. Then you can simply copy/paste the output into an email and send it to your collaborator for example. This also very helpful when you ask a question on those QA sites such as [StackOverflow](https://stackoverflow.com/) as they always want a reproducible example but at the same time will not download any files on there own computers. Once you share the `dput()` output, the recipient can simply copy/paste it into their own R console and recreate your data frame that way. Below I did the same. Simply copy/paste those two blocks of code into your console and you have those data sets ready.    
 
@@ -97,9 +97,82 @@ d2 %>%  gather(key = "key", value = "value", - Treatment) %>%
 
 ```
 
-Alright for today, I want to share another great data set with you. You can find it in the `gapminder` package:
+Here is another regex example how to clean up messy files (example data from Tomas):
 
-```{r }
+```{r message=F}
+require(tidyverse)
+require(lubridate)
+
+d3 <- structure(list(X1 = c("01-01-01", "01-02-01", "01-03-01", "01-04-01", 
+"01-05-01", "01-06-01", "01-07-01", "01-08-01", "01-09-01", "01-10-01", 
+"01-11-01", "01-12-01", "01-01-02", "01-02-02", "01-03-02", "01-04-02", 
+"01-05-02", "01-06-02", "01-07-02", "01-08-02", "01-09-02"), 
+    NAICS = c("11", "11A", "22", "23C", "31-33", "31-33", "31-33", 
+    "31-33", "31-33", "31-33", "31-33", "41", "51", "61", "51C", 
+    "71", "81", "91", "91", "91", "91"), Persons = c("100F", 
+    "120A", "96", "19", "89", "54", "81", "92", "86", "57B", 
+    "76", "5", "91", "7", "30", "77", "22", "32", "77", "48", 
+    "32"), Wages = c("..", "N/A", "120", "80", "na", NA, "Na", 
+    "30", "nA", "15", "17", "83", "36", "N/A", "43", "..", "14", 
+    "11", "N/A", "..", "77")), class = c("spec_tbl_df", "tbl_df", 
+"tbl", "data.frame"), row.names = c(NA, -21L), spec = structure(list(
+    cols = list(X1 = structure(list(), class = c("collector_character", 
+    "collector")), NAICS = structure(list(), class = c("collector_character", 
+    "collector")), Persons = structure(list(), class = c("collector_character", 
+    "collector")), Wages = structure(list(), class = c("collector_character", 
+    "collector"))), default = structure(list(), class = c("collector_guess", 
+    "collector")), skip = 1), class = "col_spec"))
+```
+
+Using `str_view()` we can see what the regex is matching. Then we can either `str_extract()` or `str_replace()`. If there is one simply pattern of what you want to keep, then use `str_extract()`. On the other hand sometimes it makes more sense to use `str_replace` (see example below).
+
+```{r eval=F}
+str_view(d3$NAICS, "\\d+") # see the matches
+str_extract(d3$NAICS, "\\d+") # we can use str_extract here to pull out what we want
+
+# we can apply the same logic here:
+str_view(d3$Persons, "\\d+") # see the matches
+str_extract(d3$Persons, "\\d+") # we can use str_extract here to pull out what we want
+
+# finding various types of NAs. Here it's better to identify a common pattern and replace it with nothing
+str_view(d3$Wages, "\\.+|[nN/aA]+") # see the matches
+str_replace(d3$Wages, "\\.+|[nN/aA]+", "")
+```
+
+Now this works for this data set, so let's proceed and fix it up.
+
+```{r}
+# clean data
+d3 %>% 
+  rename(Date = X1) %>%
+  # first I change `Date` to an actual date object using `ymd()` from the `lubridate` package
+  mutate(Date = ymd(Date),
+         NAICS = str_extract(NAICS, "\\d+"),
+         Persons = str_extract(Persons, "\\d+"),
+         Wages = str_replace(Wages, "\\.+|[nN/aA]+", "")) %>%
+  # mutate_at will apply a function to specific variables
+  # in this case we need to change from `character` to `double` (or numeric)
+  # see `?mutate_at` for details
+  mutate_at(.vars = vars(NAICS, Persons, Wages), .funs = as.double) %>% 
+  # with `print` you can change how many rows you want to see (default is 10)
+  print(n = 40)
+
+```
+
+We also talked about the `fill()` function from the `dplyr` package. Very handy function! Put it in your tool box! Here is an example:
+
+```{r}
+(d4 <- tibble(Country = c("Western Canada", NA, NA, "Central Canada", NA, NA),
+              Province = c("BC", "AB", "SK","MB", "ON", "QC")))
+
+d4 %>% 
+  fill(Country)
+
+```
+
+Now I want to share another great data set with you. You can find it in the `gapminder` package:
+
+```{r}
 require(gapminder)
 ```
 
@@ -140,20 +213,45 @@ gapminder %>%
   filter(continent == "Europe") -> europe 
   
 m2 <- lm(lifeExp ~ gdpPercap, europe)
-m2 # lifeExp = 65.34 + 4.535*10^-4 * gdpPercap
-
+m2
 
 summary(m2)
-
-new_data <- tibble(gdpPercap = c(20000, 30000, 40000, 50000))
-new_data
-
-predict(m2, new_data, interval = "prediction")
 
 ggplot(europe, aes(gdpPercap, lifeExp)) + 
   geom_point() +
   geom_smooth(method = "lm") +
   labs(x = "GDP per capita", y = "Life Expectancy")
+```
+```{r}
+# predict some new data from the model
+new_data <- tibble(gdpPercap = c(20000, 30000, 40000, 50000))
+new_data
+
+predict(m2, new_data, interval = "prediction")
 
 ```
 
+# Multiple models
+Also check out the chapter [Many Models](https://r4ds.had.co.nz/many-models.html) in the [R for Data Science](https://r4ds.had.co.nz/) book.
+
+```{r}
+gapminder %>%
+  group_by(country, continent) %>% 
+  nest() -> gapm_country
+gapm_country
+
+# And then run the lm function only once!
+gapm_country %>% 
+  mutate(model = map(data, ~ lm(lifeExp ~ year, data = .x))) -> country_model
+country_model
+
+# Using the `tidy()` function from the `broom` package we can see each model result in one data frame!
+country_model %>% 
+  mutate(tidy_models = map(model, broom::tidy)) %>% # replace with `broom::augment` and `broom::glance`
+  unnest(tidy_models) -> model_summary
+model_summary
+```
+
+```{r eval = F}
+write_csv(model_summary, "model_summary")
+```
