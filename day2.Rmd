@@ -1,6 +1,6 @@
 ---
 title: "R Data manipulation and visualization"
-subtitle: "EXGEN5449 - Winter 2019"
+subtitle: "EXGEN5449 - Winter 2020"
 author: "Stefan Schreiber"
 output:
   html_document:
@@ -54,7 +54,7 @@ require(tidyverse) #OR
 library(tidyverse)
 ```
 
-Alright with that being out of the way let's head over to the [tidyverse](https://www.tidyverse.org/) website and start exploring what we can do! Then start working on a few examples from the [R for Data Science](https://r4ds.had.co.nz/) book.
+Alright with that being out of the way let's head over to the [tidyverse](https://www.tidyverse.org/) website and start exploring what we can do! Then start working with the [R for Data Science](https://r4ds.had.co.nz/) book.
 
 # Maps for Tomas
 ## Using latitude and longitude data
