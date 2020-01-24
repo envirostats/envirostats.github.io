@@ -1,6 +1,6 @@
 ---
 title: "R Introduction"
-subtitle: "EXGEN5449 - Winter 2019"
+subtitle: "EXGEN5449 - Winter 2020"
 author: "Stefan Schreiber"
 output:
   html_document:
@@ -595,7 +595,7 @@ df[df$A == "D", ]
 df[df$C != 0, ]
 df[df$B > 0.5, ]
 df[df$A %in% c("A", "C"),] # %in% is used when you want to select/match elements based on an vector of elements see: ?'%in%
-df[df$A == c("A", "AC"),] # same result 
+df[df$A == c("A", "C"),] # not the same result why? 
 df[df$A %in% c("C", "A"),] # same result
 df[df$A == c("C", "A"),] # not the same result why?
 ```
