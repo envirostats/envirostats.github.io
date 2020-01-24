@@ -1,6 +1,6 @@
 ---
 title: "Regular expressions and simple models"
-subtitle: "EXGEN5449 - Winter 2019"
+subtitle: "EXGEN5449 - Winter 2020"
 author: "Stefan Schreiber"
 output:
   html_document:
@@ -242,12 +242,12 @@ gapm_country
 
 # And then run the lm function only once!
 gapm_country %>% 
-  mutate(model = map(data, ~ lm(lifeExp ~ year, data = .x))) -> country_model
+  mutate(model = purrr::map(data, ~ lm(lifeExp ~ year, data = .x))) -> country_model
 country_model
 
 # Using the `tidy()` function from the `broom` package we can see each model result in one data frame!
 country_model %>% 
-  mutate(tidy_models = map(model, broom::tidy)) %>% # replace with `broom::augment` and `broom::glance`
+  mutate(tidy_models = purrr::map(model, broom::tidy)) %>% # replace with `broom::augment` and `broom::glance`
   unnest(tidy_models) -> model_summary
 model_summary
 ```
