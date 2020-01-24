@@ -16,15 +16,13 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## R Language for Statistical Computing in Business Analysis
 
-Hello and welcome to our course website! My name is [Stefan Schreiber](https://envirostats.ca/) and I am your course instructor for [EXGEN 5449](https://www.ualberta.ca/extension/continuing-education/courses/EXGEN-5449). The room number is **ENT 2 570E** and the course runs from **Friday to Sunday from 9:00 am to 4:30 pm**.
+Hello and welcome to our course website! My name is [Stefan Schreiber](https://envirostats.ca/) and I am your course instructor for [EXGEN 5449](https://www.ualberta.ca/extension/continuing-education/courses/EXGEN-5449). The room number is **ENT 2 590G** and the course runs from **Friday to Sunday from 9:00 am to 4:30 pm**.
 
 In this course, I will provide you with an introduction to the R programming language to perform data manipulation, data visualization and basic statistical analyses. Since this will be an introductory course, you won't need any prior experience in R, however, if you do, it will certainly be helpful. I designed the course to be hands-on, which means I will refrain from providing lecture-type presentations but instead spend time with you writing R code and answer questions as they appear. As with any other language, at first, it may seem impossible to ever get good at it but with time and practice you will become a data science wizard. 
 
 For this course, we will be working with [R](https://www.r-project.org/), [R Studio](https://www.rstudio.com/) and the [tidyverse packages](https://www.tidyverse.org/). If you feel like it, you can visit those links and install R and R Studio on your laptops (but we will do this together in class as well!). That being said, for this course you need a **laptop**, **R**, **R Studio**, a **web browser**, and a **spreadsheet editor** such as Excel (or a simple text editor will work too).
 
-I also recommend **two books** to serve as reference guides. The first one is called [R for Data Science](https://r4ds.had.co.nz/) and the second one is [Hands-On Programming with R](https://rstudio-education.github.io/hopr/). You can read both books online for free, or purchase a hard-copy from Amazon if you prefer.
-
-On March 15, I will upload all course material for the respective days (see navigation pane above). In the meantime, have a look at the links I provided here and give them a quick read if you like. This will get you suffciently prepared for the course.
+I also recommend **two books** to serve as reference guides. The first one is called [R for Data Science](https://r4ds.had.co.nz/), which also serves as our coursebook, and the second one is [Hands-On Programming with R](https://rstudio-education.github.io/hopr/). You can read both books online for free, or purchase a hard-copy from Amazon if you prefer.
 
 As of now, I am planning to cover the following topics (but I am flexible and can adapt to the needs of you guys!):
 
