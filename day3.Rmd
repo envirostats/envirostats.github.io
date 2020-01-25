@@ -87,13 +87,13 @@ d2
 # see also ?regex 
 
 # run each line individually to see what the function are doing
-d1 %>%  gather(key = "key", value = "value", - Treatment) %>% 
+d1 %>%  pivot_longer(names_to =  "key", values_to = "value", - Treatment) %>% 
   extract(key, c("parameter", "Days"), "([[:alpha:]]+)[[:space:][:punct:]]*([[:digit:]]+)") %>%
-  spread(parameter, value)
+  pivot_wider(names_from = parameter, values_from = value)
 
-d2 %>%  gather(key = "key", value = "value", - Treatment) %>%
+d2 %>%  pivot_longer(names_to =  "key", values_to = "value", - Treatment) %>% 
   extract(key, c("parameter", "Days"), "([[:alpha:]]+)[[:space:][:punct:]]*([[:digit:]]+)") %>%
-  spread(parameter, value)
+  pivot_wider(names_from = parameter, values_from = value)
 
 ```
 
