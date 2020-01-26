@@ -203,7 +203,6 @@ ggplot(tukey_comparisons, aes(x = continent, y = emmean)) +
   geom_errorbar(aes(ymin = lower.CL, ymax = upper.CL), width = 0.25) +
   geom_text(aes(x = continent, y = upper.CL + 3, label = .group2)) +
   labs(x = "Continent", y = "Mean Life Expectancy")
-
 ```
 
 
@@ -228,7 +227,6 @@ new_data <- tibble(gdpPercap = c(20000, 30000, 40000, 50000))
 new_data
 
 predict(m2, new_data, interval = "prediction")
-
 ```
 
 # Multiple models
@@ -340,12 +338,10 @@ d2 %>%
   group_by(X1) %>%
   slice(2:n()) #see ?slice
 
-
 d2 %>%
   fill(X1) %>%
   group_by(X1) %>%
   slice(-1) #see ?slice
-
 
 d2 %>%
   fill(X1) %>%
@@ -367,13 +363,11 @@ iris %>%
   geom_col() +
   labs(x = "Petal width (mm, binned)", y = "Petal length (mm)")
 
-
 gss_cat %>% # also check ?gss_cat
   ggplot(aes(partyid, age)) +
   geom_boxplot() +
   labs(x = "Age", y = "Party ID") +
   coord_flip()
-
 
 gss_cat %>%
   mutate(bin = fct_collapse(
@@ -388,9 +382,7 @@ gss_cat %>%
   geom_boxplot() +
   labs(x = "Age", y = "Party ID (binned)") +
   coord_flip()
-
-## also check here https://forcats.tidyverse.org/index.html
-
+# also check here https://forcats.tidyverse.org/index.html
 
 # combination of multiple variables ?case_when
 
@@ -410,15 +402,17 @@ starwars %>%
 set.seed(1) # setting a seed ensures that the random number generation using the rnorm() function is the same for everyone
 d3 <-
   tibble(PRE = c(rnorm(10, mean = 4, sd = 2)), POST = c(rnorm(10, mean = 6, sd = 2)))
+
 d3
 
-t.test(d3$PRE, d3$POST, paired = T)
 t.test(d3$PRE, d3$POST, paired = F)
+t.test(d3$PRE, d3$POST, paired = T)
 
 d3 %>% 
   pivot_longer(everything(), names_to = "treat", values_to = "values") -> d4
 
-t.test(values ~ treat, paired = T, data = d4)
+d4
 
+t.test(values ~ treat, paired = T, data = d4)
 ```
 
