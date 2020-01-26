@@ -255,3 +255,170 @@ model_summary
 ```{r eval = F}
 write_csv(model_summary, "model_summary")
 ```
+
+# For Allison
+```{r}
+require(gapminder)
+require(tidyverse)
+
+gapminder %>%
+  group_by(continent, year) %>%
+  summarize(M = mean(gdpPercap), SE = error(gdpPercap)) -> new_d
+
+new_d %>%
+  ggplot() +
+  geom_ribbon(
+    data = filter(new_d, year == 1952),
+    aes(
+      x = as.numeric(continent),
+      ymin = M - SE,
+      ymax = M + SE
+    ),
+    fill = "grey70"
+  ) +
+  geom_line(data = filter(new_d, year == 1952),
+            aes(as.numeric(continent), M),
+            size = 1) +
+  geom_col(
+    data = filter(new_d, year == 1957),
+    aes(as.numeric(continent), M),
+    alpha = 0.7,
+    fill = "red"
+  ) +
+  geom_errorbar(
+    data = filter(new_d, year == 1957),
+    aes(
+      as.numeric(continent),
+      ymin = M - SE,
+      ymax = M + SE
+    ),
+    width = .25
+  ) +
+  scale_x_continuous(breaks = 1:5, labels = levels(new_d$continent)) +
+  labs(x = "Continent", y = "gdpPercap")
+
+new_d %>%
+  filter(year %in% c(1952, 1957)) %>%
+  ggplot(aes(continent, M, group = year)) +
+  geom_col(aes(fill = factor(year)), position = "dodge") +
+  geom_errorbar(aes(ymin = M - SE, ymax = M + SE),
+                width = 0.25,
+                position = position_dodge(.9)) +
+  labs(x = "Continent", y = "gdpPercap", fill = "Year")
+```
+
+# For Lisa
+```{r}
+# d <- read_csv("Book1.csv", col_names = FALSE) # make sure to set col_names = FALSE
+
+d2 <- structure(
+  list(
+    X1 = c(1996, NA, NA, NA, NA, NA, 1997, NA, NA,
+           NA, NA),
+    X2 = c(NA, 1, 2, 1, 2, 3, NA, 4, 2, 3, 4)
+  ),
+  class = c("spec_tbl_df",
+            "tbl_df", "tbl", "data.frame"),
+  row.names = c(NA, -11L),
+  spec = structure(list(
+    cols = list(
+      X1 = structure(list(), class = c("collector_double",
+                                       "collector")),
+      X2 = structure(list(), class = c("collector_double",
+                                       "collector"))
+    ),
+    default = structure(list(), class = c("collector_guess",
+                                          "collector")),
+    skip = 0
+  ), class = "col_spec")
+)
+
+d2
+
+d2 %>%
+  fill(X1) %>%
+  group_by(X1) %>%
+  slice(2:n()) #see ?slice
+
+
+d2 %>%
+  fill(X1) %>%
+  group_by(X1) %>%
+  slice(-1) #see ?slice
+
+
+d2 %>%
+  fill(X1) %>%
+  group_by(X1) %>%
+  filter(between(row_number(), 2, n())) #see ?slice
+```
+# For Jenny and Allison (and everyone)
+```{r}
+iris %>%
+  ggplot(aes(Petal.Width, Petal.Length)) + geom_point()
+
+iris %>%
+  mutate(bin = cut(
+    Petal.Width,
+    breaks = c(0, 0.5, 1 , 1.5, 2, 2.5),
+    labels = NULL
+  )) %>%
+  ggplot(aes(bin, Petal.Length)) +
+  geom_col() +
+  labs(x = "Petal width (mm, binned)", y = "Petal length (mm)")
+
+
+gss_cat %>% # also check ?gss_cat
+  ggplot(aes(partyid, age)) +
+  geom_boxplot() +
+  labs(x = "Age", y = "Party ID") +
+  coord_flip()
+
+
+gss_cat %>%
+  mutate(bin = fct_collapse(
+    partyid,
+    missing = c("No answer", "Don't know"),
+    other = "Other party",
+    rep = c("Strong republican", "Not str republican"),
+    ind = c("Ind,near rep", "Independent", "Ind,near dem"),
+    dem = c("Not str democrat", "Strong democrat")
+  )) %>%
+  ggplot(aes(bin, age)) +
+  geom_boxplot() +
+  labs(x = "Age", y = "Party ID (binned)") +
+  coord_flip()
+
+## also check here https://forcats.tidyverse.org/index.html
+
+
+# combination of multiple variables ?case_when
+
+# case_when is particularly useful inside mutate when you want to
+# create a new variable that relies on a complex combination of existing
+# variables
+starwars %>%
+  select(name:mass, gender, species) %>%
+  mutate(type = case_when(
+    height > 200 | mass > 200 ~ "large",
+    species == "Droid"        ~ "robot",
+    TRUE                      ~ "other"
+  ))
+```
+# For Antonio
+```{r}
+set.seed(1) # setting a seed ensures that the random number generation using the rnorm() function is the same for everyone
+d3 <-
+  tibble(PRE = c(rnorm(10, mean = 4, sd = 2)), POST = c(rnorm(10, mean = 6, sd = 2)))
+d3
+
+t.test(d3$PRE, d3$POST, paired = T)
+t.test(d3$PRE, d3$POST, paired = F)
+
+d3 %>% 
+  pivot_longer(everything(), names_to = "treat", values_to = "values") -> d4
+
+t.test(values ~ treat, paired = T, data = d4)
+
+```
+
